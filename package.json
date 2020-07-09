@@ -1,0 +1,19 @@
+{
+  "name": "cw_ops_practice",
+  "version": "1.0.0",
+  "description": "Make practice mp3's for CWOps beginner program",
+  "main": "index.js",
+  "scripts": {
+    "generate": "node index.js"
+  },
+  "author": "Mark Percival <m@mdp.im>",
+  "license": "MIT",
+  "dependencies": {
+    "morse-pro": "^2.0.0",
+    "newsapi": "^2.4.0",
+    "next": "^9.4.4",
+    "podcast": "^1.3.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

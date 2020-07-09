@@ -1,0 +1,121 @@
+const config = require("./config.json")
+const keys = require("./keys.json")
+const fs = require("fs")
+const path = require("path")
+const { promisify } = require("util");
+
+const NewsAPI = require("newsapi")
+const newsapi = new NewsAPI(keys.newsapi_key)
+
+const writeFile = promisify(fs.writeFile);
+const mkdir = promisify(fs.mkdir);
+const unlink = promisify(fs.unlink);
+const exec = promisify(require('child_process').exec);
+const headlines = promisify(newsapi.v2.topHeadlines);
+
+
+const MorseCWWave = require("morse-pro/lib/morse-pro-cw-wave").default
+const riffwave = require("morse-pro/lib/morse-pro-util-riffwave").getData
+
+const reserved = {
+  "/":"[Slash]",
+  "?":"[QMark]",
+  "<":"[",
+  ">":"]"
+}
+
+function sanitize(chars) {
+  let out = ""
+  for (let i=0; i<chars.length; i++) {
+    const sub = reserved[chars[i]]
+    if (sub) {
+      out = out.concat(sub)
+    } else {
+      out = out.concat(chars[i])
+    }
+  }
+  return out
+}
+
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+async function createAudioFile(content, out, wpm, farnsworth) {
+  const morseCWWave = new MorseCWWave(true, wpm, farnsworth)
+  const outFileWav = `${out}.wav`
+  const outFileMP3 = `${out}.mp3`
+  console.log(content)
+  morseCWWave.translate(content)
+  console.log(content)
+  await writeFile(outFileWav,
+    Buffer.from(riffwave(morseCWWave.getSample()))
+  )
+  console.log(`Written ${outFileWav}`)
+  // TODO: Error check this
+  let { stdout, stderr } = await exec(`ffmpeg -i ${outFileWav} -y -codec:a libmp3lame -b:a 160k ${outFileMP3}`)
+  await unlink(outFileWav)
+  console.log(`Compressed ${outFileMP3}`)
+}
+
+async function buildAudioFiles(name, content, config) {
+  for (let j=0; j<config.output.speeds.length; j++) {
+    const [wpm, fwpm] = config.output.speeds[j]
+    const out = config.output.outputDir + `/${name}-${wpm}x${fwpm}-${Date.now()}`
+    console.info(`Creating headline audio for ${wpm} wpm at farnsworth speed of ${fwpm}`)
+    await createAudioFile(content, out, wpm, fwpm)
+  }
+}
+
+function cleanTitles(txt) {
+  txt = txt.split(" - ")[0] // Lose the ending attribution
+  txt = txt.replace(/[\-]/g," ") // Hyphens, seldom used in morse and seldom needed
+  txt = txt.replace(/[^a-zA-Z0-9\s\.\,]/g,"") // Just letters, numbers, commas and periods
+  txt = txt.replace(/\s{2,}/g," ") // Get rid of any weird spacing
+  return txt
+}
+
+async function main(config, api_key) {
+  const newsapi = new NewsAPI(api_key);
+  // To query /v2/top-headlines
+  // All options passed to topHeadlines are optional, but you need to include at least one of them
+  for (let i=0; i<config.news_queries.length; i++) {
+    const results = await headlines(config.news_queries[i].query)
+    const titles = results.articles.map(a => a['title']);
+    const cleanedTitles = titles.map(cleanTitles);
+    const name = `${config.news_queries[i].name}_Headlines`
+    console.log(name)
+
+    // 1x
+    let headlineTitles = cleanedTitles.join(" <AR> ")
+    headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
+
+    // Get the first 10 headlines and repeat them 3x
+    let headlineTitlesRepeated = cleanedTitles.slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> ")
+    headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
+    console.log(headlineTitles)
+    console.log(headlineTitlesRepeated)
+
+    await buildAudioFiles(name + '-1x', headlineTitles, config)
+    await buildAudioFiles(name + '-3x', headlineTitlesRepeated, config)
+  }
+}
+
+console.log(keys)
+main(config, keys['newsapi_key']).catch(error => console.error(error));

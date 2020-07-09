@@ -1,0 +1,39 @@
+{
+  "news_queries": [
+    {
+      "name": "Sports",
+      "query": {
+        "pageSize": 25,
+        "category": "sports",
+        "language": "en",
+        "country": "us"
+      }
+    },
+    {
+      "name": "Business",
+      "query": {
+        "pageSize": 25,
+        "category": "business",
+        "language": "en",
+        "country": "us"
+      }
+    },
+    {
+      "name": "UK",
+      "query": {
+        "pageSize": 25,
+        "sources": "bbc-news",
+        "language": "en"
+      }
+    }
+  ],
+  "output": {
+    "outputDir":"./public",
+    "speeds": [
+      [25,10],
+      [25,15],
+      [25,20],
+      [25,25]
+    ]
+  }
+}
