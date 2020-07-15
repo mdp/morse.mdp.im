@@ -1,4 +1,4 @@
-# CWOps Practice MP3 Generator
+# Morse Code Headlines
 
 ## Requirement
 
@@ -7,12 +7,9 @@
 
 ## Installation
 
-- `git clone git@github.com:mdp/cwops_practice.git`
-- `cd cwops_practice`
+- `git clone git@github.com:mdp/morse_code_news.git`
+- `cd morse_code_news`
 - `npm install`
-- `npm run generate`
+- `./generate.sh`
 - Wait, this will take a while
 
-## Customization
-
-Take a look at cwops_beginner.json for options

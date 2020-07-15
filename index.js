@@ -75,7 +75,7 @@ async function createAudioFile(content, out, wpm, farnsworth) {
 }
 
 async function buildAudioFiles(name, outputDir, speeds, content) {
-  for (let j=0; j<speeds.length; j++) {
+  for (let j=0; j < speeds.length; j++) {
     const [wpm, fwpm] = speeds[j]
     const out = outputDir + `/${name}-${wpm}x${fwpm}-${Date.now()}`
     console.info(`Creating audio for ${name} at ${wpm} wpm and a farnsworth speed of ${fwpm}`)
@@ -112,8 +112,9 @@ async function main(config, api_key) {
     console.log(headlineTitles)
     console.log(headlineTitlesRepeated)
 
-    await buildAudioFiles(name + '-1x', config.outputDir, speeds, headlineTitles)
-    await buildAudioFiles(name + '-3x', config.outputDir, speeds, headlineTitlesRepeated)
+    const output = config.output
+    await buildAudioFiles(name + '-1x', output.outputDir, output.speeds, headlineTitles)
+    await buildAudioFiles(name + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
   }
 }
 
