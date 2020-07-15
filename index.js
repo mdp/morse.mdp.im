@@ -74,11 +74,11 @@ async function createAudioFile(content, out, wpm, farnsworth) {
   console.log(`Compressed ${outFileMP3}`)
 }
 
-async function buildAudioFiles(name, content, config) {
-  for (let j=0; j<config.output.speeds.length; j++) {
-    const [wpm, fwpm] = config.output.speeds[j]
-    const out = config.output.outputDir + `/${name}-${wpm}x${fwpm}-${Date.now()}`
-    console.info(`Creating headline audio for ${wpm} wpm at farnsworth speed of ${fwpm}`)
+async function buildAudioFiles(name, outputDir, speeds, content) {
+  for (let j=0; j<speeds.length; j++) {
+    const [wpm, fwpm] = speeds[j]
+    const out = outputDir + `/${name}-${wpm}x${fwpm}-${Date.now()}`
+    console.info(`Creating audio for ${name} at ${wpm} wpm and a farnsworth speed of ${fwpm}`)
     await createAudioFile(content, out, wpm, fwpm)
   }
 }
@@ -98,7 +98,7 @@ async function main(config, api_key) {
   for (let i=0; i<config.news_queries.length; i++) {
     const results = await headlines(config.news_queries[i].query)
     const titles = results.articles.map(a => a['title']);
-    const cleanedTitles = titles.map(cleanTitles);
+    const cleanedTitles = shuffle(titles.map(cleanTitles));
     const name = `${config.news_queries[i].name}_Headlines`
     console.log(name)
 
@@ -112,10 +112,9 @@ async function main(config, api_key) {
     console.log(headlineTitles)
     console.log(headlineTitlesRepeated)
 
-    await buildAudioFiles(name + '-1x', headlineTitles, config)
-    await buildAudioFiles(name + '-3x', headlineTitlesRepeated, config)
+    await buildAudioFiles(name + '-1x', config.outputDir, speeds, headlineTitles)
+    await buildAudioFiles(name + '-3x', config.outputDir, speeds, headlineTitlesRepeated)
   }
 }
 
-console.log(keys)
 main(config, keys['newsapi_key']).catch(error => console.error(error));

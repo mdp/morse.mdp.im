@@ -22,6 +22,7 @@ export default function Index({ files }) {
           </li>
         ))}
       </ul>
+      <h6> Source: <a href="https://github.com/mdp/morse_code_news">https://github.com/mdp/morse_code_news</a> </h6>
     </div>
   );
 }
