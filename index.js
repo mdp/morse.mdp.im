@@ -4,6 +4,9 @@ const fs = require("fs")
 const path = require("path")
 const { promisify } = require("util");
 
+const Parser = require('rss-parser');
+const parser = new Parser();
+
 const NewsAPI = require("newsapi")
 const newsapi = new NewsAPI(keys.newsapi_key)
 
@@ -91,31 +94,63 @@ function cleanTitles(txt) {
   return txt
 }
 
-async function main(config, api_key) {
+// Returns a list of ArsTechnica title
+async function arsTechnicaFeed() {
+  let feed = await parser.parseURL('http://feeds.arstechnica.com/arstechnica/technology-lab');
+
+  const titles = feed.items.map(i => i.title);
+  const cleanedTitles = shuffle(titles.map(cleanTitles));
+  return {
+    "Tech_Headlines": cleanedTitles
+  }
+}
+
+// Returns a list of NewsAPI
+async function newsAPIFeed(api_key) {
   const newsapi = new NewsAPI(api_key);
   // To query /v2/top-headlines
   // All options passed to topHeadlines are optional, but you need to include at least one of them
+  const output = {}
   for (let i=0; i<config.news_queries.length; i++) {
     const results = await headlines(config.news_queries[i].query)
     const titles = results.articles.map(a => a['title']);
     const cleanedTitles = shuffle(titles.map(cleanTitles));
     const name = `${config.news_queries[i].name}_Headlines`
-    console.log(name)
+    output[name] = cleanedTitles
+  }
+  return output
+}
 
-    // 1x
-    let headlineTitles = cleanedTitles.join(" <AR> ")
+async function main(config, api_key) {
+  const ars = await arsTechnicaFeed()
+  const newsAPI = await newsAPIFeed(api_key)
+
+  Object.keys(ars).forEach( async (k) => {
+    let headlineTitles = ars[k].join(" <AR> <AR> ")
     headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
-    // Get the first 10 headlines and repeat them 3x
-    let headlineTitlesRepeated = cleanedTitles.slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> ")
+    let headlineTitlesRepeated = ars[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
     headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
     console.log(headlineTitles)
     console.log(headlineTitlesRepeated)
-
     const output = config.output
-    await buildAudioFiles(name + '-1x', output.outputDir, output.speeds, headlineTitles)
-    await buildAudioFiles(name + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
-  }
+    await buildAudioFiles(k + '-1x', output.outputDir, output.speeds, headlineTitles)
+    await buildAudioFiles(k + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
+  })
+
+  Object.keys(newsAPI).forEach( async (k) => {
+    let headlineTitles = newsAPI[k].join(" <AR> <AR> ")
+    headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
+
+    let headlineTitlesRepeated = newsAPI[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
+    headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
+    console.log(headlineTitles)
+    console.log(headlineTitlesRepeated)
+    const output = config.output
+    await buildAudioFiles(k + '-1x', output.outputDir, output.speeds, headlineTitles)
+    await buildAudioFiles(k + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
+  })
+
 }
 
 main(config, keys['newsapi_key']).catch(error => console.error(error));
