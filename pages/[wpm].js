@@ -4,21 +4,23 @@ import { promisify } from 'util'
 
 const readdir = promisify(fs.readdir);
 
-import Link from 'next/link';
-
-export default function Index({ wpms, files }) {
-  console.log("WPMs:", wpms)
+export default function Index({ files }) {
+  console.log("Files:", files)
   return (
     <div>
       <h1>📰  Morse Code News 📰 </h1>
       <h2>Last Update: {new Date(files[0].date).toUTCString().replace(" GMT", "Z")}</h2>
-      <h3>Select your speed</h3>
       <ul>
-        {wpms.map((wpm) => (
-          <li className='centered'>
-            <Link href='/[wpm]' as={`/${wpm}`}>
-              <a> {wpm} WPM </a>
-            </Link>
+        {files.map((file) => (
+          <li>
+            <a href={file.file}>
+              {file.name} - {file.repeat} | {file.wpm}@{file.fwpm}
+            </a>
+            <span className='right'>
+              <a href={file.file.replace(/mp3$/, 'txt')} target='_blank'>
+                Text
+              </a>
+            </span>
           </li>
         ))}
       </ul>
@@ -45,7 +47,23 @@ function parseFilename(filename) {
   }
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps({params}) {
+  const files = await readdir('./public')
+  console.log("Files", files)
+  let mp3s = files.filter((file) => {
+    return path.extname(file).toLowerCase() === '.mp3'
+  }).map(parseFilename);
+  mp3s = mp3s.filter((file) => {
+    return file.fwpm === params['wpm']
+  })
+  return {
+    props: {
+      files: mp3s
+    },
+  }
+}
+
+export async function getStaticPaths(context) {
   const files = await readdir('./public')
 
   const mp3s = files.filter(function(file) {
@@ -59,11 +77,12 @@ export async function getStaticProps(context) {
   }
   let wpms = mp3s.reduce(reducer, [])
 
+
+  // Get the paths we want to pre-render based on posts
+  const paths = wpms.map((wpm) => `/${wpm}`)
   console.log(wpms)
-  return {
-    props: {
-      wpms,
-      files: mp3s,
-    },
-  }
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false } 
 }

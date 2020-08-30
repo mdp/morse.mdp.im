@@ -12,6 +12,11 @@ h2{
   text-align: center;
 }
 
+h3 {
+  font-size: 1.1em;
+  text-align: center;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -38,6 +43,13 @@ li a {
   -o-transition: font-size 0.3s ease, background-color 0.3s ease;
   -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
   transition: font-size 0.3s ease, background-color 0.3s ease;
+}
+
+li.centered {
+  margin: auto;
+  text-align: center;
+  display: block;
+  max-width: 300px;
 }
 
 li a:hover {
