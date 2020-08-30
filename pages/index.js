@@ -16,9 +16,13 @@ export default function Index({ files }) {
         {files.map((file) => (
           <li>
             <a href={file.file}>
-              {file.name} - {file.repeat}
-              <span className='right'>{file.wpm}@{file.fwpm}</span>
+              {file.name} - {file.repeat} | {file.wpm}@{file.fwpm}
             </a>
+            <span className='right'>
+              <a href={file.file.replace(/mp3$/, 'txt')} target='_blank'>
+                Text
+              </a>
+            </span>
           </li>
         ))}
       </ul>

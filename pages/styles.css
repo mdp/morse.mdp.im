@@ -21,6 +21,8 @@ ul {
 li {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
+  display: block;
+  max-width: 500px;
 }
 
 li:last-child {
@@ -36,8 +38,6 @@ li a {
   -o-transition: font-size 0.3s ease, background-color 0.3s ease;
   -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
   transition: font-size 0.3s ease, background-color 0.3s ease;
-  display: block;
-  max-width: 500px;
 }
 
 li a:hover {

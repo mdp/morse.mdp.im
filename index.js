@@ -1,7 +1,6 @@
 const config = require("./config.json")
 const keys = require("./keys.json")
 const fs = require("fs")
-const path = require("path")
 const { promisify } = require("util");
 
 const Parser = require('rss-parser');
@@ -11,7 +10,6 @@ const NewsAPI = require("newsapi")
 const newsapi = new NewsAPI(keys.newsapi_key)
 
 const writeFile = promisify(fs.writeFile);
-const mkdir = promisify(fs.mkdir);
 const unlink = promisify(fs.unlink);
 const exec = promisify(require('child_process').exec);
 const headlines = promisify(newsapi.v2.topHeadlines);
@@ -19,27 +17,6 @@ const headlines = promisify(newsapi.v2.topHeadlines);
 
 const MorseCWWave = require("morse-pro/lib/morse-pro-cw-wave").default
 const riffwave = require("morse-pro/lib/morse-pro-util-riffwave").getData
-
-const reserved = {
-  "/":"[Slash]",
-  "?":"[QMark]",
-  "<":"[",
-  ">":"]"
-}
-
-function sanitize(chars) {
-  let out = ""
-  for (let i=0; i<chars.length; i++) {
-    const sub = reserved[chars[i]]
-    if (sub) {
-      out = out.concat(sub)
-    } else {
-      out = out.concat(chars[i])
-    }
-  }
-  return out
-}
-
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -64,9 +41,11 @@ async function createAudioFile(content, out, wpm, farnsworth) {
   const morseCWWave = new MorseCWWave(true, wpm, farnsworth)
   const outFileWav = `${out}.wav`
   const outFileMP3 = `${out}.mp3`
+  const outFileTxt = `${out}.txt`
   console.log(content)
   morseCWWave.translate(content)
   console.log(content)
+  await writeFile(outFileTxt, content)
   await writeFile(outFileWav,
     Buffer.from(riffwave(morseCWWave.getSample()))
   )
@@ -86,12 +65,16 @@ async function buildAudioFiles(name, outputDir, speeds, content) {
   }
 }
 
-function cleanTitles(txt) {
-  txt = txt.split(" - ")[0] // Lose the ending attribution
-  txt = txt.replace(/[\-]/g," ") // Hyphens, seldom used in morse and seldom needed
-  txt = txt.replace(/[^a-zA-Z0-9\s\.\,]/g,"") // Just letters, numbers, commas and periods
-  txt = txt.replace(/\s{2,}/g," ") // Get rid of any weird spacing
-  return txt
+function cleanTitles(options={}) {
+  return (txt) => {
+    if (options.attribution) {
+      txt = txt.split(" - ")[0] // Lose the ending attribution
+    }
+    txt = txt.replace(/[\-]/g, " ") // Hyphens, seldom used in morse and seldom needed
+    txt = txt.replace(/[^a-zA-Z0-9\s\.\,]/g, "") // Just letters, numbers, commas and periods
+    txt = txt.replace(/\s{2,}/g, " ") // Get rid of any weird spacing
+    return txt
+  }
 }
 
 // Returns a list of ArsTechnica title
@@ -99,7 +82,7 @@ async function arsTechnicaFeed() {
   let feed = await parser.parseURL('http://feeds.arstechnica.com/arstechnica/technology-lab');
 
   const titles = feed.items.map(i => i.title);
-  const cleanedTitles = shuffle(titles.map(cleanTitles));
+  const cleanedTitles = shuffle(titles.map(cleanTitles()));
   return {
     "Tech_Headlines": cleanedTitles
   }
@@ -114,7 +97,7 @@ async function newsAPIFeed(api_key) {
   for (let i=0; i<config.news_queries.length; i++) {
     const results = await headlines(config.news_queries[i].query)
     const titles = results.articles.map(a => a['title']);
-    const cleanedTitles = shuffle(titles.map(cleanTitles));
+    const cleanedTitles = shuffle(titles.map(cleanTitles({attribution: true})));
     const name = `${config.news_queries[i].name}_Headlines`
     output[name] = cleanedTitles
   }
