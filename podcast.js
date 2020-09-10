@@ -15,7 +15,7 @@ async function getFiles(config) {
   const outputDir = config.output.outputDir;
   const files = await readdir(outputDir)
 
-  const mp3s = files.map(parseFilename).filter((f) => f.ext === 'mp3').sort((a,b) => { 
+  const mp3s = files.filter((file) => path.extname(file).toLowerCase() === '.mp3').map(parseFilename).sort((a,b) => { 
     if (a.date > b.date) {
       return -1
     }
