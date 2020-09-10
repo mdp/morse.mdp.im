@@ -52,7 +52,7 @@ async function buildPodcast(config, podcastEpisodes) {
     const wpm = speeds[i]
     episodes = podcastEpisodes[wpm]
     const feed = new Podcast({
-      title: `News Headlines at ${wpm} WPM`,
+      title: `News Headlines in Morse Code at ${wpm} WPM`,
       description: 'News Headlines in Morse code, updated daily',
       feed_url: 'http://morse.mdp.im/rss-${wpm}.xml',
       site_url: 'http://morse.mdp.im',
@@ -66,22 +66,22 @@ async function buildPodcast(config, podcastEpisodes) {
       pubDate: Date.now(),
       ttl: '360',
       itunesAuthor: 'Mark Percival',
-      itunesSubtitle: 'I am a sub title',
-      itunesSummary: 'I am a summary',
+      itunesSubtitle: "News Headlines in Morse Code",
+      itunesSummary: 'Daily updated news headlines in morse code',
       itunesOwner: { name: 'Mark Percival', email: 'm@mdp.im' },
       itunesExplicit: false,
       itunesCategory: [{
-        "text": "Entertainment",
+        "text": "News",
         "subcats": [{
-          "text": "Television"
+          "text": "Daily News"
         }]
       }],
-      itunesImage: 'http://morse.mdp.im/image.png'
+      itunesImage: 'http://morse.mdp.im/podcast_cover.jpg'
     });
     for (let j=0; episodes.length > j; j++) {
       let episode = episodes[j]
       feed.addItem({
-        title: `Morse Code Headlines at ${episode.fwpm}`,
+        title: `News Headlines at ${episode.fwpm}`,
         description: episode.content,
         url: `https://${config.host}`, // link to the item
         date: episode.pubDate,
@@ -99,8 +99,8 @@ async function buildPodcast(config, podcastEpisodes) {
 
 async function main(config) {
   episodes = await getFiles(config)
-  console.log(episodes)
   await buildPodcast(config, episodes)
+  console.log("Podcast feeds built")
 }
 
 
