@@ -57,11 +57,11 @@ async function buildPodcast(config, podcastEpisodes) {
     const wpm = speeds[i]
     episodes = podcastEpisodes[wpm]
     const feed = new Podcast({
-      title: `Morse Code Headlines at ${wpm} WPM`,
-      description: 'BBC Top Stories in Morse code, updated daily',
+      title: `News Headlines at ${wpm} WPM`,
+      description: 'News Headlines in Morse code, updated daily',
       feed_url: 'http://morse.mdp.im/rss-${wpm}.xml',
       site_url: 'http://morse.mdp.im',
-      image_url: 'http://morse.mdp.im/icon.png',
+      image_url: 'http://morse.mdp.im/podcast_cover.jpg',
       author: 'Mark Percival',
       managingEditor: 'Mark Percival',
       webMaster: 'Mark Percival',
@@ -93,7 +93,7 @@ async function buildPodcast(config, podcastEpisodes) {
         enclosure: { url: episode.url, file: `./${outputDir}/${episode.filename}` },
         itunesAuthor: 'Mark Percival',
         itunesExplicit: false,
-        itunesSubtitle: 'BBC Headlines in Morse Code',
+        itunesSubtitle: 'News Headlines in Morse Code',
         itunesSummary: 'Morse Code Headlines',
       });
     }
