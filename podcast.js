@@ -1,8 +1,9 @@
 const config = require("./config.json")
 const fs = require("fs")
+const path = require("path")
 const { promisify } = require("util");
 const Podcast = require('podcast')
-const { parseFilename } = require('./lib/utils');
+const { parseFilename, getMp3s } = require('./lib/utils');
 const { group } = require("console");
 
 const writeFile = promisify(fs.writeFile);
@@ -14,13 +15,7 @@ const readdir = promisify(fs.readdir);
 async function getFiles(config) {
   const outputDir = config.output.outputDir;
   const files = await readdir(outputDir)
-
-  const mp3s = files.filter((file) => path.extname(file).toLowerCase() === '.mp3').map(parseFilename).sort((a,b) => { 
-    if (a.date > b.date) {
-      return -1
-    }
-    return 1
-  })
+  const mp3s = await getMp3s(files)
   
   let groupedEpisodes = {}
 

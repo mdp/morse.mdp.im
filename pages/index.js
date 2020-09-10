@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path, { parse } from 'path'
 import { promisify } from 'util'
-import { parseFilename } from '../lib/utils'
+import { parseFilename, getMp3s } from '../lib/utils'
 
 const readdir = promisify(fs.readdir);
 
@@ -29,13 +29,7 @@ export default function Index({ wpms, files }) {
 
 export async function getStaticProps(context) {
   const files = await readdir('./public')
-
-  const mp3s = files.filter((file) => path.extname(file).toLowerCase() === '.mp3').map(parseFilename).sort((a,b) => { 
-    if (a.date > b.date) {
-      return -1
-    }
-    return 1
-  })
+  const mp3s = await getMp3s(files)
 
   const reducer = (accumulator, currentValue) => {
     if (accumulator.indexOf(currentValue.fwpm) < 0) {
