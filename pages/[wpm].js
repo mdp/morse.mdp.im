@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path, { parse } from 'path'
 import { promisify } from 'util'
+import { parseFilename } from '../lib/utils'
 
 const readdir = promisify(fs.readdir);
 
 export default function Index({ files }) {
-  console.log("Files:", files)
   return (
     <div>
       <h1>📰  Morse Code News 📰 </h1>
@@ -13,11 +13,11 @@ export default function Index({ files }) {
       <ul>
         {files.map((file) => (
           <li>
-            <a href={file.file}>
+            <a href={file.filename}>
               {file.name} - {file.repeat} | {file.wpm}@{file.fwpm}
             </a>
             <span className='right'>
-              <a href={file.file.replace(/mp3$/, 'txt')} target='_blank'>
+              <a href={file.filename.replace(/mp3$/, 'txt')} target='_blank'>
                 Text
               </a>
             </span>
@@ -29,36 +29,31 @@ export default function Index({ files }) {
   );
 }
 
-
-function parseFilename(filename) {
-  const parts = filename.split("-")
-  const name = parts[0].replace("_", " ")
-  const repeat = parts[1]
-  const speed = parts[2]
-  const [wpm, fwpm] = speed.split("x")
-  const date = Date.now(parts[3])
-  return {
-    name,
-    wpm,
-    repeat,
-    fwpm,
-    date,
-    file: filename,
-  }
-}
-
 export async function getStaticProps({params}) {
   const files = await readdir('./public')
-  console.log("Files", files)
   let mp3s = files.filter((file) => {
     return path.extname(file).toLowerCase() === '.mp3'
   }).map(parseFilename);
+
   mp3s = mp3s.filter((file) => {
-    return file.fwpm === params['wpm']
-  })
+    return file.fwpm === parseInt(params['wpm'], 10)
+  }).sort((a,b) => a.date > b.date ? -1 : 1)
+
+
+  let latestMp3s = mp3s.reduce((accumulator, mp3) => {
+    if(!accumulator.find((a) => {
+      return a.fwpm === mp3.fwpm && a.wpm === mp3.wpm &&
+             a.repeat === mp3.repeat &&
+             a.name === mp3.name
+    })) {
+      accumulator.push(mp3)
+    }
+    return accumulator
+  }, [])
+
   return {
     props: {
-      files: mp3s
+      files: latestMp3s
     },
   }
 }
@@ -80,7 +75,6 @@ export async function getStaticPaths(context) {
 
   // Get the paths we want to pre-render based on posts
   const paths = wpms.map((wpm) => `/${wpm}`)
-  console.log(wpms)
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.

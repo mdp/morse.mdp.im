@@ -1,4 +1,7 @@
 #!/bin/bash
 
-rm -rf public/*.mp3 public/*.wav
+mkdir -p tmp
+rm -rf tmp/*
+find public/*.mp3 -mtime +5 -exec rm {} \;
+find public/*.txt -mtime +5 -exec rm {} \;
 node index.js

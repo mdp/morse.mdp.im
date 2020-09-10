@@ -1,36 +1,19 @@
 {
   "news_queries": [
     {
-      "name": "Sports",
+      "name": "News",
       "query": {
-        "pageSize": 25,
-        "category": "sports",
-        "language": "en",
-        "country": "us"
-      }
-    },
-    {
-      "name": "Business",
-      "query": {
-        "pageSize": 25,
-        "category": "business",
-        "language": "en",
-        "country": "us"
-      }
-    },
-    {
-      "name": "UK",
-      "query": {
-        "pageSize": 25,
-        "sources": "bbc-news",
+        "pageSize": 20,
+        "sources": "bbc-news, cnn",
         "language": "en"
       }
     }
   ],
+  "host": "morse.mdp.im",
   "output": {
     "outputDir":"./public",
+    "tmpDir":"./tmp",
     "speeds": [
-      [25,10],
       [25,15],
       [25,20],
       [25,25],

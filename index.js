@@ -96,8 +96,9 @@ async function newsAPIFeed(api_key) {
   const output = {}
   for (let i=0; i<config.news_queries.length; i++) {
     const results = await headlines(config.news_queries[i].query)
+    console.log(results)
     const titles = results.articles.map(a => a['title']);
-    const cleanedTitles = shuffle(titles.map(cleanTitles({attribution: true})));
+    const cleanedTitles = shuffle(titles.map(cleanTitles({attribution: false})));
     const name = `${config.news_queries[i].name}_Headlines`
     output[name] = cleanedTitles
   }
@@ -107,8 +108,11 @@ async function newsAPIFeed(api_key) {
 async function main(config, api_key) {
   const ars = await arsTechnicaFeed()
   const newsAPI = await newsAPIFeed(api_key)
+  const output = config.output
 
-  Object.keys(ars).forEach( async (k) => {
+  const arsKeys = Object.keys(ars)
+  for(let i=0; i < arsKeys.length; i++) {
+    let k = arsKeys[i]
     let headlineTitles = ars[k].join(" <AR> <AR> ")
     headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
@@ -116,12 +120,13 @@ async function main(config, api_key) {
     headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
     console.log(headlineTitles)
     console.log(headlineTitlesRepeated)
-    const output = config.output
-    await buildAudioFiles(k + '-1x', output.outputDir, output.speeds, headlineTitles)
-    await buildAudioFiles(k + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
-  })
+    await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
+    await buildAudioFiles(k + '-3x', output.tmpDir, output.speeds, headlineTitlesRepeated)
+  }
 
-  Object.keys(newsAPI).forEach( async (k) => {
+  const newsKeys = Object.keys(newsAPI)
+  for(let i=0; i < newsKeys.length; i++) {
+    let k = newsKeys[i]
     let headlineTitles = newsAPI[k].join(" <AR> <AR> ")
     headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
@@ -129,10 +134,12 @@ async function main(config, api_key) {
     headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
     console.log(headlineTitles)
     console.log(headlineTitlesRepeated)
-    const output = config.output
-    await buildAudioFiles(k + '-1x', output.outputDir, output.speeds, headlineTitles)
-    await buildAudioFiles(k + '-3x', output.outputDir, output.speeds, headlineTitlesRepeated)
-  })
+    await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
+    await buildAudioFiles(k + '-3x', output.tmpDir, output.speeds, headlineTitlesRepeated)
+  }
+
+  // Move tmp files over to outputDir only after success
+  await exec(`mv ${config.output.tmpDir}/* ${config.output.outputDir}/.`)
 
 }
 
