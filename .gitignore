@@ -1,5 +1,7 @@
 node_modules
-public
+public/*.xml
+public/*.mp3
+public/*.txt
 .next
 out
 tmp
