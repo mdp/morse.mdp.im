@@ -84,7 +84,7 @@ async function buildPodcast(config, podcastEpisodes) {
         title: `News Headlines at ${episode.fwpm}`,
         description: episode.content,
         url: `https://${config.host}`, // link to the item
-        date: episode.pubDate,
+        date: episode.date,
         enclosure: { url: episode.url, file: `./${outputDir}/${episode.filename}` },
         itunesAuthor: 'Mark Percival',
         itunesExplicit: false,
