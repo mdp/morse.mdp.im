@@ -71,7 +71,7 @@ function cleanTitles(options={}) {
       txt = txt.split(" - ")[0] // Lose the ending attribution
     }
     txt = txt.replace(/[\-]/g, " ") // Hyphens, seldom used in morse and seldom needed
-    txt = txt.replace(/[^a-zA-Z0-9\s\.\,]/g, "") // Just letters, numbers, commas and periods
+    txt = txt.replace(/[^a-zA-Z0-9\s\.\,]/g, " ") // Just letters, numbers, commas and periods
     txt = txt.replace(/\s{2,}/g, " ") // Get rid of any weird spacing
     return txt
   }
