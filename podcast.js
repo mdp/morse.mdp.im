@@ -86,7 +86,7 @@ async function buildPodcast(config, podcastEpisodes) {
       feed.addItem({
         title: `News Headlines at ${episode.fwpm}`,
         description: entities.encode(episode.content),
-        url: `https://${config.host}`, // link to the item
+        url: `https://${episode.url}`, // link to the item
         date: episode.date,
         enclosure: { url: episode.url, file: `./${outputDir}/${episode.filename}` },
         itunesAuthor: 'Mark Percival',
