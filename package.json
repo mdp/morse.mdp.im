@@ -9,6 +9,7 @@
   "author": "Mark Percival <m@mdp.im>",
   "license": "MIT",
   "dependencies": {
+    "html-entities": "^1.3.1",
     "morse-pro": "^2.0.0",
     "newsapi": "^2.4.0",
     "next": "^9.4.4",

@@ -6,6 +6,9 @@ const Podcast = require('podcast')
 const { parseFilename, getMp3s } = require('./lib/utils');
 const { group } = require("console");
 
+const Entities = require('html-entities').XmlEntities;
+const entities = new Entities();
+
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const statFile = promisify(fs.stat);
@@ -84,7 +87,7 @@ async function buildPodcast(config, podcastEpisodes) {
         title: `News Headlines at ${episode.fwpm}`,
         description: episode.content,
         url: `https://${config.host}`, // link to the item
-        date: episode.date,
+        date: entities.encode(episode.date),
         enclosure: { url: episode.url, file: `./${outputDir}/${episode.filename}` },
         itunesAuthor: 'Mark Percival',
         itunesExplicit: false,
