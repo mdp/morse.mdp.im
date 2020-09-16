@@ -4,7 +4,7 @@
       "name": "News",
       "query": {
         "pageSize": 20,
-        "sources": "bbc-news, cnn",
+        "sources": "bbc-news, google-news",
         "language": "en"
       }
     }
