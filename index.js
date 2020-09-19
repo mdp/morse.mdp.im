@@ -112,19 +112,18 @@ async function main(config, api_key) {
   const newsAPI = await newsAPIFeed(api_key)
   const output = config.output
 
-  const arsKeys = Object.keys(ars)
-  for(let i=0; i < arsKeys.length; i++) {
-    let k = arsKeys[i]
-    let headlineTitles = ars[k].join(" <AR> <AR> ")
-    headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
+  // const arsKeys = Object.keys(ars)
+  // for(let i=0; i < arsKeys.length; i++) {
+  //   let k = arsKeys[i]
+  //   let headlineTitles = ars[k].join(" <AR> <AR> ")
+  //   headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
-    let headlineTitlesRepeated = ars[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
-    headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
-    console.log(headlineTitles)
-    console.log(headlineTitlesRepeated)
-    await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
-    await buildAudioFiles(k + '-3x', output.tmpDir, output.speeds, headlineTitlesRepeated)
-  }
+  //   let headlineTitlesRepeated = ars[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
+  //   headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
+  //   console.log(headlineTitles)
+  //   console.log(headlineTitlesRepeated)
+  //   await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
+  // }
 
   const newsKeys = Object.keys(newsAPI)
   for(let i=0; i < newsKeys.length; i++) {
@@ -132,12 +131,9 @@ async function main(config, api_key) {
     let headlineTitles = newsAPI[k].join(" <AR> <AR> ")
     headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
-    let headlineTitlesRepeated = newsAPI[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
-    headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
     console.log(headlineTitles)
-    console.log(headlineTitlesRepeated)
+    await writeFile(output.tmpDir + '/news_headlines.json', JSON.stringify({headlines: newsAPI[k], createdOn: (new Date()).toISOString()}))
     await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
-    await buildAudioFiles(k + '-3x', output.tmpDir, output.speeds, headlineTitlesRepeated)
   }
 
   // Move tmp files over to outputDir only after success
