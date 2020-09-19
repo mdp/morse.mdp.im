@@ -2,6 +2,7 @@
 
 
 rm -rf out
+rm -rf .next
 mkdir -p out
 
 mkdir -p archive

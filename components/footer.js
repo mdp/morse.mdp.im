@@ -22,7 +22,8 @@ export default function Footer() {
               </h3>
               <p className="py-4 text-gray-600 text-sm">
                 The headlines on this site are also available as a 20wpm podcast and available
-                on <a href="https://podcasts.apple.com/us/podcast/id1531399638">iTunes</a> and <a href="https://www.listennotes.com/podcasts/news-headlines-in-morse-code-at-20-wpm-mark-JIUqd6RwXsa/">ListenNotes</a>
+                on <a href="https://podcasts.apple.com/us/podcast/id1531399638">iTunes</a> or
+                using the <a href="/rss-20.xml">RSS Feed</a>
               </p>
             </div>
           </div>
