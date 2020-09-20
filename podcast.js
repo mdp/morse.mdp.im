@@ -57,7 +57,7 @@ async function buildPodcast(config, podcastEpisodes) {
     const feed = new Podcast({
       title: `News Headlines in Morse Code at ${wpm} WPM`,
       description: 'News Headlines in Morse code, updated daily',
-      feed_url: 'http://morse.mdp.im/rss-${wpm}.xml',
+      feed_url: `http://morse.mdp.im/rss-${wpm}.xml`,
       site_url: 'http://morse.mdp.im',
       image_url: 'http://morse.mdp.im/podcast_cover.jpg',
       author: 'Mark Percival',
