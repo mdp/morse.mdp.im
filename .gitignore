@@ -2,6 +2,8 @@ node_modules
 public/*.xml
 public/*.mp3
 public/*.txt
+public/*.json
+archive
 .next
 out
 tmp
