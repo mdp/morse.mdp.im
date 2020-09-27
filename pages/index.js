@@ -42,7 +42,7 @@ export default function Index({headlines, createdOn}) {
       return
     }
     validateSpeed()
-    var morseCWWave = new MorseCWWave(true, wpm, fwpm);
+    var morseCWWave = new MorseCWWave(true, parseInt(wpm, 10), parseInt(fwpm, 10));
     morseCWWave.translate(target.getAttribute('content'));
     var datauri = getDataURI(RiffWave.getData(morseCWWave.getSample()), RiffWave.getMIMEType()); // create an HTML5 audio element
     audioRef.current.src = datauri
