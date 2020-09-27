@@ -29,7 +29,7 @@ export default function Index({headlines, createdOn}) {
   const audioRef = useRef()
 
   function validateSpeed() {
-    if (wpm < fwpm) {
+    if (parseInt(wpm, 10) < parseInt(fwpm, 10)) {
       setWpm(fwpm)
     }
   }
