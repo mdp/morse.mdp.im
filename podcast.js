@@ -33,10 +33,14 @@ async function getFiles(config) {
     for (let j=0; mp3s.length > j; j++) {
       let mp3 = mp3s[j]
       if (mp3.wpm === wpm && mp3.fwpm === fwpm && mp3.name === "News Headlines" && mp3.repeat === "1x") {
-        mp3.content = await readFile(outputDir + '/' + mp3.filename.replace(/mp3$/, 'txt'), "utf-8")
-        mp3.length = await statFile(outputDir + '/' + mp3.filename.replace(/mp3$/, 'txt'), "utf-8")['size']
-        mp3.url = `https://${config.host}/${mp3.filename}`
-        groupedEpisodes[fwpm].push(mp3)
+        try {
+          mp3.content = await readFile(outputDir + '/' + mp3.filename.replace(/mp3$/, 'txt'), "utf-8")
+          mp3.length = await statFile(outputDir + '/' + mp3.filename, "utf-8")['size']
+          mp3.url = `https://${config.host}/${mp3.filename}`
+          groupedEpisodes[fwpm].push(mp3)
+        } catch (e) {
+          console.log(`Error with file ${mp3.filename}`, e)
+        }
       }
 
     }
