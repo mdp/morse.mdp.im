@@ -25,6 +25,7 @@ async function getFiles(config) {
   const speeds = [
     [20,20],
     [20,15],
+    [25,25],
   ]
 
   for (let i=0; speeds.length > i; i++) {
