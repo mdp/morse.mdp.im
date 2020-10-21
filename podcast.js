@@ -84,7 +84,7 @@ async function buildPodcast(config, podcastEpisodes) {
           "text": "Daily News"
         }]
       }],
-      itunesImage: 'http://morse.mdp.im/podcast_cover.jpg'
+      itunesImage: `http://morse.mdp.im/podcast_cover_${wpm}.jpg`,
     });
     for (let j=0; episodes.length > j; j++) {
       let episode = episodes[j]
