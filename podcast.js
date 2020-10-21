@@ -64,7 +64,7 @@ async function buildPodcast(config, podcastEpisodes) {
       description: 'News Headlines in Morse code, updated daily',
       feed_url: `http://morse.mdp.im/rss-${wpm}.xml`,
       site_url: 'http://morse.mdp.im',
-      image_url: 'http://morse.mdp.im/podcast_cover.jpg',
+      image_url: `http://morse.mdp.im/podcast_cover_${wpm}.jpg`,
       author: 'Mark Percival',
       managingEditor: 'Mark Percival',
       webMaster: 'Mark Percival',
