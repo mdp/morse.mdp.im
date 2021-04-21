@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import MorseCWWave from 'morse-pro/lib/morse-pro-cw-wave'
 import getDataURI from 'morse-pro/lib/morse-pro-util-datauri';
 import * as RiffWave from 'morse-pro/lib/morse-pro-util-riffwave';
+import createPersistedState from 'use-persisted-state';
 
 const readFileAsync = promisify(readFile);
 
@@ -22,10 +23,13 @@ export async function getStaticProps(context) {
   }
 }
 
+const wpmState = createPersistedState('wpm');
+const fwpmState = createPersistedState('fwpm');
+
 export default function Index({headlines, createdOn}) {
   const [currentTrackIdx, setCurrentTrackIdx] = useState(-1)
-  const [wpm, setWpm] = useState(20)
-  const [fwpm, setFwpm] = useState(20)
+  const [wpm, setWpm] = wpmState(20)
+  const [fwpm, setFwpm] = fwpmState(20)
   const audioRef = useRef()
 
   function validateSpeed() {
