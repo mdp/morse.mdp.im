@@ -1,26 +1,15 @@
-import {readFile} from 'fs'
-import { promisify } from 'util'
 import { useState, useRef } from 'react'
 import MorseCWWave from 'morse-pro/lib/morse-pro-cw-wave'
 import getDataURI from 'morse-pro/lib/morse-pro-util-datauri';
 import * as RiffWave from 'morse-pro/lib/morse-pro-util-riffwave';
 import createPersistedState from 'use-persisted-state';
 
-const readFileAsync = promisify(readFile);
-
 import Footer from '../components/footer';
 
-
-export async function getStaticProps(context) {
-  let headlines = await readFileAsync('./public/news_headlines.json')
-  headlines = JSON.parse(headlines)
-
-  return {
-    props: {
-      headlines:headlines.headlines,
-      createdOn:headlines.createdOn,
-    },
-  }
+Index.getInitialProps = async (ctx) => {
+  const res = await fetch("https://morse.mdp.im/podcast/news_headlines.json");
+  const data = res.json();
+  return data
 }
 
 const wpmState = createPersistedState('wpm');

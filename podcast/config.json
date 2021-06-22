@@ -11,8 +11,8 @@
   ],
   "host": "morse.mdp.im",
   "output": {
-    "outputDir":"./public",
-    "tmpDir":"./tmp",
+    "outputDir":"./cache/podcast",
+    "tmpDir":"./cache/tmp",
     "speeds": [
       [20,15],
       [20,20],

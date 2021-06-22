@@ -1,10 +1,11 @@
 {
-  "name": "cw_ops_practice",
-  "version": "1.0.0",
-  "description": "Make practice mp3's for CWOps beginner program",
+  "name": "morse_code_headline",
+  "version": "2.0.0",
+  "description": "News headlines in Morse Code",
   "main": "index.js",
   "scripts": {
-    "generate": "node index.js",
+    "build_podcast_audio": "node podcast/index.js",
+    "build_podcast_rss": "node podcast/rss.js",
     "dev": "next",
     "build": "next build",
     "start": "next start"

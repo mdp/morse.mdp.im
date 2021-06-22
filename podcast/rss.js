@@ -3,7 +3,7 @@ const fs = require("fs")
 const path = require("path")
 const { promisify } = require("util");
 const Podcast = require('podcast')
-const { parseFilename, getMp3s } = require('./lib/utils');
+const { parseFilename, getMp3s } = require('../lib/utils');
 const { group } = require("console");
 
 const Entities = require('html-entities').XmlEntities;
@@ -37,7 +37,7 @@ async function getFiles(config) {
         try {
           mp3.content = await readFile(outputDir + '/' + mp3.filename.replace(/mp3$/, 'txt'), "utf-8")
           mp3.length = await statFile(outputDir + '/' + mp3.filename, "utf-8")['size']
-          mp3.url = `https://${config.host}/${mp3.filename}`
+          mp3.url = `https://${config.host}/podcast/${mp3.filename}`
           groupedEpisodes[fwpm].push(mp3)
         } catch (e) {
           console.log(`Error with file ${mp3.filename}`, e)
@@ -62,9 +62,9 @@ async function buildPodcast(config, podcastEpisodes) {
     const feed = new Podcast({
       title: `News Headlines in Morse Code at ${wpm} WPM`,
       description: 'News Headlines in Morse code, updated daily',
-      feed_url: `http://morse.mdp.im/rss-${wpm}.xml`,
-      site_url: `http://morse.mdp.im/#${wpm}wpm`,
-      image_url: `http://morse.mdp.im/podcast_cover_${wpm}.jpg`,
+      feed_url: `https://morse.mdp.im/podcast/rss-${wpm}.xml`,
+      site_url: `https://morse.mdp.im/#${wpm}wpm`,
+      image_url: `https://morse.mdp.im/podcast_cover_${wpm}.jpg`,
       author: 'Mark Percival',
       managingEditor: 'Mark Percival',
       webMaster: 'Mark Percival',
@@ -84,7 +84,7 @@ async function buildPodcast(config, podcastEpisodes) {
           "text": "Daily News"
         }]
       }],
-      itunesImage: `http://morse.mdp.im/podcast_cover_${wpm}.jpg`,
+      itunesImage: `https://morse.mdp.im/podcast_cover_${wpm}.jpg`,
     });
     for (let j=0; episodes.length > j; j++) {
       let episode = episodes[j]

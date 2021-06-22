@@ -6,14 +6,18 @@ Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for hi
 
 ## Requirement
 
-- Node >= 13.x
+- Node >= 14.x
 - ffmpeg installed
 
-## Installation
+# Deployment
 
-- `git clone git@github.com:mdp/morse_code_news.git`
-- `cd morse_code_news`
-- `npm install`
-- `./generate.sh`
-- Wait, this will take a while
+## Build the required docker image
+docker build . -t mpercival/morsenews
 
+## Generate and deploy a new episode of the podcast
+
+docker run --rm -it -v ~/.s3cfg:/root/.s3cfg -v $(pwd)/cache:/usr/src/app/cache  mpercival/morsenews ./generate_podcast.sh
+
+## Generate and deploy the latest webstie
+
+`docker run --rm -it -v ~/.s3cfg:/root/.s3cfg  mpercival/morsenews ./build_and_deploy_site.sh`

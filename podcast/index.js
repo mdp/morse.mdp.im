@@ -3,9 +3,6 @@ const keys = require("./keys.json")
 const fs = require("fs")
 const { promisify } = require("util");
 
-const Parser = require('rss-parser');
-const parser = new Parser();
-
 const NewsAPI = require("newsapi")
 const newsapi = new NewsAPI(keys.newsapi_key)
 
@@ -42,9 +39,7 @@ async function createAudioFile(content, out, wpm, farnsworth) {
   const outFileWav = `${out}.wav`
   const outFileMP3 = `${out}.mp3`
   const outFileTxt = `${out}.txt`
-  console.log(content)
   morseCWWave.translate(content)
-  console.log(content)
   await writeFile(outFileTxt, content)
   await writeFile(outFileWav,
     Buffer.from(riffwave(morseCWWave.getSample()))
@@ -108,22 +103,7 @@ async function newsAPIFeed(api_key) {
 }
 
 async function main(config, api_key) {
-  const ars = await arsTechnicaFeed()
   const newsAPI = await newsAPIFeed(api_key)
-  const output = config.output
-
-  // const arsKeys = Object.keys(ars)
-  // for(let i=0; i < arsKeys.length; i++) {
-  //   let k = arsKeys[i]
-  //   let headlineTitles = ars[k].join(" <AR> <AR> ")
-  //   headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
-
-  //   let headlineTitlesRepeated = ars[k].slice(0,9).map((t) => `${t} <BT> ${t} <BT> ${t}`).join(" <AR> <AR> ")
-  //   headlineTitlesRepeated = `vvv vvv ${headlineTitlesRepeated} <SK> <SK> <SK>`
-  //   console.log(headlineTitles)
-  //   console.log(headlineTitlesRepeated)
-  //   await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
-  // }
 
   const newsKeys = Object.keys(newsAPI)
   for(let i=0; i < newsKeys.length; i++) {
@@ -132,8 +112,8 @@ async function main(config, api_key) {
     headlineTitles = `vvv vvv ${headlineTitles} <SK> <SK> <SK>`
 
     console.log(headlineTitles)
-    await writeFile(output.tmpDir + '/news_headlines.json', JSON.stringify({headlines: newsAPI[k], createdOn: (new Date()).toISOString()}))
-    await buildAudioFiles(k + '-1x', output.tmpDir, output.speeds, headlineTitles)
+    await writeFile(config.output.tmpDir + '/news_headlines.json', JSON.stringify({headlines: newsAPI[k], createdOn: (new Date()).toISOString()}))
+    await buildAudioFiles(k + '-1x', config.output.tmpDir, config.output.speeds, headlineTitles)
   }
 
   // Move tmp files over to outputDir only after success
