@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import useSWR from 'swr'
 import MorseCWWave from 'morse-pro/lib/morse-pro-cw-wave'
 import getDataURI from 'morse-pro/lib/morse-pro-util-datauri';
 import * as RiffWave from 'morse-pro/lib/morse-pro-util-riffwave';
@@ -6,16 +7,20 @@ import createPersistedState from 'use-persisted-state';
 
 import Footer from '../components/footer';
 
-Index.getInitialProps = async (ctx) => {
-  const res = await fetch("https://morse.mdp.im/podcast/news_headlines.json");
-  const data = res.json();
-  return data
-}
-
 const wpmState = createPersistedState('wpm');
 const fwpmState = createPersistedState('fwpm');
 
-export default function Index({headlines, createdOn}) {
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+
+export default function Index() {
+  let createdOn = '...';
+  let headlines = [];
+  const {data, err} = useSWR("https://morse.mdp.im/podcast/news_headlines.json", fetcher);
+  if (data) {
+    headlines = data.headlines;
+    createdOn = data.createdOn;
+  }
+
   const [currentTrackIdx, setCurrentTrackIdx] = useState(-1)
   const [wpm, setWpm] = wpmState(20)
   const [fwpm, setFwpm] = fwpmState(20)
@@ -42,6 +47,7 @@ export default function Index({headlines, createdOn}) {
     audioRef.current.play()
     setCurrentTrackIdx(trackNum)
   }
+
 
   return (
     <>
