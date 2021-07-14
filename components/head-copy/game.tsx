@@ -3,7 +3,7 @@ import MorseCWWave from 'morse-pro/lib/morse-pro-cw-wave'
 import getDataURI from 'morse-pro/lib/morse-pro-util-datauri';
 import * as RiffWave from 'morse-pro/lib/morse-pro-util-riffwave';
 import levenshteinDistance from '../../lib/levenshtein';
-import {Question}  from '../../lib/word_set_builder';
+import {Question}  from '../../lib/head_copy_buiders';
 
 const HIGHEST_SCORE = 500;
 const LOWEST_SCORE = 200;
