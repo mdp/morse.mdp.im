@@ -114,7 +114,7 @@ export default function GameMode({mode}:{mode: string}) {
 
   function renderIndexPage() {
     return(
-      <div className="container w-full md:max-w-4xl mx-auto pt-5">
+      <div className="container w-full md:max-w-xl mx-auto pt-5">
         <div
           className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" >
           <header className="font-sans text-center pb-20">
@@ -125,13 +125,13 @@ export default function GameMode({mode}:{mode: string}) {
           <div className="px-10">
             <form className="w-full max-w-lg pb-10 mx-auto">
               <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <div className="w-full px-3 mb-6 md:mb-0">
                   <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
                     WPM
                   </label>
                   <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type='text' onChange={e => setWpm(e.target.value)} value={wpm} ></input>
                 </div>
-                <div className="w-full md:w-1/2 px-3">
+                <div className="w-full px-3">
                   <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                     Farnsworth
                   </label>
@@ -139,7 +139,7 @@ export default function GameMode({mode}:{mode: string}) {
                 </div>
               </div>
             </form>
-            <button className="w-1/2 flex items-center justify-center rounded-md border border-gray-300" onClick={startNewGame}>Click to play</button>
+            <button className="w-full flex items-center justify-center rounded-md border border-gray-300" onClick={startNewGame}>Click to play</button>
           </div>
         </div>
       </div>

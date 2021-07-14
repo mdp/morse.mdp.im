@@ -1,40 +1,30 @@
-import { useState, useRef } from 'react'
-import useSWR from 'swr'
-import createPersistedState from 'use-persisted-state';
-
-import fetcher from '../../lib/fetcher';
-
-import { Game }from '../../components/head-copy/game'
-import { buildQuestionFromPhrases, buildQuestionFromWords, callSignsToPhraseList, Question } from '../../lib/head_copy_buiders';
 import { useRouter } from 'next/dist/client/router';
-import GameMode from '../../components/head-copy/game_mode';
-
-const TURNS = 50;
-
-const wpmState = createPersistedState('wpm');
-const fwpmState = createPersistedState('fwpm');
-
-const games = [
-  {title: "Top 500 Words", source: "/data/top500.json", spaced: true},
-  {title: "Callsigns", source: "/data/cwops_calls.json", spaced: false},
-]
-
-
-// Pick a game
-// Create phrases ~500 and corpus
-// Store phrases in state
-// Create questions from phrases
+import GameMode, {gameList} from '../../components/head-copy/game_mode';
+import Link from 'next/link'
 
 export default function Index() {
   const router = useRouter();
   const query = router.query;
+  const mode = [].concat(query.mode)[0] || null;
 
   function render() {
-    if (query.mode) {
+    console.log(mode)
+    if (mode) {
       return <GameMode mode={[].concat(query.mode)[0]}></GameMode>
     } else {
       return renderIndexPage()
     }
+  }
+  
+  function listGames() {
+    return Object.keys(gameList).map((key) =>
+      <li className="items-center my-2 px-4" key={key}>
+        <Link href={`/head-copy?mode=${key}`}>
+          <button className="w-full justify-center rounded-md border border-gray-300 p-4"
+          >{gameList[key].title}</button>
+        </Link>
+      </li>
+    )
   }
 
   function renderIndexPage() {
@@ -50,8 +40,8 @@ export default function Index() {
           <div className="px-10">
             <form className="w-full max-w-lg pb-10 mx-auto">
               <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  Game list here
+                <div className="w-full px-3 mb-6 md:mb-0">
+                  <ul>{listGames()}</ul>
                 </div>
               </div>
             </form>

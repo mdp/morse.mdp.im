@@ -76,7 +76,7 @@ export function AnswerSet({words, pick, onAnswer}) {
   )
 
   return(
-    <ul className="w-full absolute bottom-0">{answerSet}</ul>
+    <ul className="w-full flex-row">{answerSet}</ul>
   )
 }
 
@@ -158,7 +158,7 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
     if (state.played && state.wordIdx < wordSetLength) {
       return <AnswerSet words={question.answers[state.wordIdx]} pick={state.wordPicks[state.wordIdx]} onAnswer={onAnswer}></AnswerSet>
     } else if (!state.playing) {
-      return <div className="w-full flex items-center bottom-0 p-4 absolute">
+      return <div>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4" onClick={onNext}>Next</button>
       </div>
     }
@@ -185,10 +185,10 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
 
 
   return (
-    <div className="container w-full md:max-w-4xl mx-auto pt-5">
+    <div className="w-full flex flex-col h-full">
       <audio ref={audioRef} onEnded={audioPlayComplete}></audio>
       <div>{renderAnswers()}</div>
-      <div>
+      <div className="mt-auto">
         {renderAnswerSet()}
       </div>
     </div>
@@ -225,7 +225,7 @@ export function Game({getQuestion, onGameUpdate, onCancelGame, wpm, fwpm, turns}
   }
 
   return (
-    <div className="container w-full flex-auto md:max-w-4xl mx-auto h-screen">
+    <div className="flex flex-col w-full md:max-w-xl mx-auto p-4 h-screen">
       <div className="grid grid-cols-2 justify-items-center">
         <div>Score: {state.score}</div>
         <div>Turn {state.turnIdx + 1}/50</div>

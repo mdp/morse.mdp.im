@@ -103,7 +103,8 @@ export const buildQuestionFromPhrases = function(phraseList: PhraseList,
     }
     const phrasePick = randomPick(phraseList.phrases);
     for (let j=0; j < phraseLen; j++) {
-        const answers = similar(phrasePick[j], phraseList.corpus[j], answerCount - 1).concat(phrasePick[j]).sort()
+        const corpus = phraseList.corpus[j].filter((p) => p.length === phrasePick[j].length )
+        const answers = similar(phrasePick[j], corpus, answerCount - 1).concat(phrasePick[j]).sort()
         q.phrase.push(phrasePick[j])
         q.answers.push(answers)
     }
