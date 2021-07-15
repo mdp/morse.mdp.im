@@ -129,7 +129,10 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
     // It seems to launch the sound and quickly fade in the audio which clips the first dit slightly
     const joiner = question.spaced ? " " : ""
     morseCWWave.translate("  " + state.wordPicks.join(joiner));
-    var datauri = getDataURI(RiffWave.getData(morseCWWave.getSample()), RiffWave.getMIMEType()); // create an HTML5 audio element
+    const timings = morseCWWave.getTimings();
+    timings.unshift(-250) //Add padding to the beginning for mobile and bluetooth
+    const sample = MorseCWWave.getSampleGeneral(timings, morseCWWave.frequency, morseCWWave.sampleRate, 10);
+    const datauri = getDataURI(RiffWave.getData(sample), RiffWave.getMIMEType()); // create an HTML5 audio element
     if (audioRef.current && state.audioState === "empty") {
       audioRef.current.src = datauri;
       audioRef.current.load();
