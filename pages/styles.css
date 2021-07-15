@@ -18,3 +18,17 @@ span.blur:hover {
 a {
   @apply text-blue-600
 }
+
+@font-face {
+  font-family: 'PressStart2P-Regular';
+  src: url('/fonts/PressStart2P-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'IBMPlexMono-Regular';
+  src: url('/fonts/IBMPlexMono-Regular.ttf');
+}
+
+.font-8bit {
+  font-family: "PressStart2P-Regular"
+}

@@ -91,8 +91,7 @@ interface TurnProps {
 export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
   const wordSetLength = question.phrase.length;
   const defaultState = {
-      playing: true,
-      played: false,
+      audioState: "empty",
       wordIdx: 0,
       turnIdx,
       score: 0,
@@ -106,6 +105,14 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
   })
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  if (state.audioState === "queuePlay") {
+    audioRef.current.play()
+    setState({
+      ...state,
+      audioState: "playing"
+    })
+  }
+
 
   function playTurn() {
     console.log("Playing turn", state)
@@ -117,23 +124,32 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
         wordPicks: question.phrase,
       })
     }
-    if (!state.playing) {
-      return true;
-    }
     var morseCWWave = new MorseCWWave(true, wpm, fwpm);
     // On mobile(ios at least) we need to lead with a space to let the sound volume come up
     // It seems to launch the sound and quickly fade in the audio which clips the first dit slightly
     const joiner = question.spaced ? " " : ""
     morseCWWave.translate("  " + state.wordPicks.join(joiner));
     var datauri = getDataURI(RiffWave.getData(morseCWWave.getSample()), RiffWave.getMIMEType()); // create an HTML5 audio element
-    if (audioRef.current) {
-      audioRef.current.src = datauri
-      audioRef.current.play()
+    if (audioRef.current && state.audioState === "empty") {
+      audioRef.current.src = datauri;
+      audioRef.current.load();
+      setState({...state, audioState: "initialized"})
     }
   }
 
   function audioPlayComplete() {
-      setState({...state, played: true, playing: false})
+      console.log("Play complete")
+      setState({...state, audioState: "played"})
+  }
+
+  function canPlay() {
+      console.log("CanPlay")
+      if (state.audioState === "initialized") {
+        setState({
+          ...state,
+          audioState: "queuePlay"
+        })
+      }
   }
 
   function onAnswer(score, correctWord, wordSelected) {
@@ -155,9 +171,9 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
   }
 
   function renderAnswerSet() {
-    if (state.played && state.wordIdx < wordSetLength) {
+    if (state.audioState === "played" && state.wordIdx < wordSetLength) {
       return <AnswerSet words={question.answers[state.wordIdx]} pick={state.wordPicks[state.wordIdx]} onAnswer={onAnswer}></AnswerSet>
-    } else if (!state.playing) {
+    } else if (state.audioState === "played") {
       return <div>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4" onClick={onNext}>Next</button>
       </div>
@@ -186,9 +202,9 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
 
   return (
     <div className="w-full flex flex-col h-full">
-      <audio ref={audioRef} onEnded={audioPlayComplete}></audio>
+      <audio ref={audioRef} onEnded={audioPlayComplete} onCanPlayThrough={canPlay}></audio>
       <div>{renderAnswers()}</div>
-      <div className="mt-auto">
+      <div className="mt-auto ">
         {renderAnswerSet()}
       </div>
     </div>
