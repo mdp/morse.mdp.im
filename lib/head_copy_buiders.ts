@@ -18,6 +18,7 @@ export interface PhraseList {
 export interface GameData {
   phraseList?: PhraseList,
   wordList?: string[],
+  wordPhraseLength?: number, // For building phrases from wordList
   spaced?: boolean,
   description: string,
   turns: number,

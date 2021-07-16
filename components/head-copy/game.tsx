@@ -1,48 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import MorseCWWave from 'morse-pro/lib/morse-pro-cw-wave'
-import getDataURI from 'morse-pro/lib/morse-pro-util-datauri';
-import * as RiffWave from 'morse-pro/lib/morse-pro-util-riffwave';
-import levenshteinDistance from '../../lib/levenshtein';
+import { useRef, useState } from 'react'
 import {Question}  from '../../lib/head_copy_buiders';
+import Result from './result';
+import MorseAudio from '../morse_audio';
 
 const HIGHEST_SCORE = 500;
 const LOWEST_SCORE = 200;
 const FASTEST_RESPONSE = 1500; // time to get the full points
 const SLOWEST_RESPONSE = 5000; // time after a correct answer gets lowest score
-
-function shuffle(array: string[]): string[] {
-  return array.sort(() => Math.random() - 0.5);
-}
-
-function randomPick(array: string[]): string {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function similar(word: string, array: string[]): string[] {
-  return array.concat().sort(function(a,b): number {
-    const aNum = levenshteinDistance(word, a);
-    const bNum = levenshteinDistance(word, b);
-    if (aNum > bNum) {
-      return 1
-    } else if (aNum < bNum) {
-      return -1
-    }
-    return 0;
-  })
-}
-
-// Return x sets of y words
-function wordSetBuilder(wordList: string[], x: number, y: number): string[][] {
-  const sets = []
-  for (let i=0; i < x; i++) {
-    let pick = randomPick(wordList);
-    let others = similar(pick, wordList).slice(1, y);
-    let set = [pick]
-    set = set.concat(others)
-    sets.push(set)
-  }
-  return sets
-}
 
 export function AnswerSet({words, pick, onAnswer}) {
 
@@ -69,9 +33,9 @@ export function AnswerSet({words, pick, onAnswer}) {
     }
   }
 
-  const answerSet = words.sort().map((word) =>
-      <li className="items-center my-2 px-4">
-          <button className="w-full justify-center rounded-md border border-gray-300 p-4" onClick={onClick}>{word}</button>
+  const answerSet = words.sort().map((word, i) =>
+      <li key={word + i} className="items-center my-2 px-4">
+          <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3" onClick={onClick}>{word}</button>
       </li>
   )
 
@@ -86,73 +50,31 @@ interface TurnProps {
   onComplete: Function,
   wpm: number,
   fwpm: number,
+  spaced: boolean,
 }
 
-export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
+export function Turn({question, turnIdx, onComplete, wpm, fwpm, spaced}: TurnProps) {
   const wordSetLength = question.phrase.length;
   const defaultState = {
       audioState: "empty",
       wordIdx: 0,
-      turnIdx,
+      turnIdx: -1,
       score: 0,
       answers: [],
+      content: null
   }
+
 
   // Default state
   const [state, setState] = useState({
     ...defaultState,
-    wordPicks: question.phrase,
   })
 
-  const audioRef = useRef<HTMLAudioElement>(null);
-  if (state.audioState === "queuePlay") {
-    audioRef.current.play()
-    setState({
-      ...state,
-      audioState: "playing"
-    })
-  }
-
-
-  function playTurn() {
-    console.log("Playing turn", state)
-    if (state.turnIdx < turnIdx) {
-      console.log("New turn")
-      setState({
-        ...defaultState,
-        turnIdx: turnIdx,
-        wordPicks: question.phrase,
-      })
-    }
-    var morseCWWave = new MorseCWWave(true, wpm, fwpm);
-    // On mobile(ios at least) we need to lead with a space to let the sound volume come up
-    // It seems to launch the sound and quickly fade in the audio which clips the first dit slightly
-    const joiner = question.spaced ? " " : ""
-    morseCWWave.translate("  " + state.wordPicks.join(joiner));
-    const timings = morseCWWave.getTimings();
-    timings.unshift(-250) //Add padding to the beginning for mobile and bluetooth
-    const sample = MorseCWWave.getSampleGeneral(timings, morseCWWave.frequency, morseCWWave.sampleRate, 10);
-    const datauri = getDataURI(RiffWave.getData(sample), RiffWave.getMIMEType()); // create an HTML5 audio element
-    if (audioRef.current && state.audioState === "empty") {
-      audioRef.current.src = datauri;
-      audioRef.current.load();
-      setState({...state, audioState: "initialized"})
-    }
-  }
+  console.log("Turn", question, turnIdx, state)
 
   function audioPlayComplete() {
       console.log("Play complete")
       setState({...state, audioState: "played"})
-  }
-
-  function canPlay() {
-      console.log("CanPlay")
-      if (state.audioState === "initialized") {
-        setState({
-          ...state,
-          audioState: "queuePlay"
-        })
-      }
   }
 
   function onAnswer(score, correctWord, wordSelected) {
@@ -175,38 +97,34 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm}: TurnProps) {
 
   function renderAnswerSet() {
     if (state.audioState === "played" && state.wordIdx < wordSetLength) {
-      return <AnswerSet words={question.answers[state.wordIdx]} pick={state.wordPicks[state.wordIdx]} onAnswer={onAnswer}></AnswerSet>
+      return <AnswerSet words={question.answers[state.wordIdx]} pick={question.phrase[state.wordIdx]} onAnswer={onAnswer}></AnswerSet>
     } else if (state.audioState === "played") {
       return <div>
-          <button className="w-full justify-center rounded-md border border-gray-300 p-4" onClick={onNext}>Next</button>
+          <button className="w-full justify-center eightbit-btn text-xl p-4" onClick={onNext}>Next</button>
       </div>
     }
     return false;
   }
 
-  function renderAnswers() {
-    const words = [];
-    for (let i=0; i < state.answers.length; i++) {
-      let answer = state.answers[i];
-      console.log(answer);
-      if (answer[0] === answer[1]) {
-        words.push(<span className='correct'>{answer[1]} </span>)
-      } else {
-        words.push(<span className='wrong'><span style={{textDecoration:'line-through'}}>{answer[1]}</span> {answer[0]} </span>)
-      }
-    }
-    return words
+  function renderAudio() {
+    return <MorseAudio text={state.content} wpm={wpm} fwpm={fwpm} onComplete={audioPlayComplete}></MorseAudio>
   }
 
-  useEffect(() => {
-    playTurn();
-  });
+  if (state.turnIdx < turnIdx) {
+    console.log("New turn", state)
+    const joiner = question.spaced ? " " : ""
+    setState({
+      ...defaultState,
+      turnIdx: turnIdx,
+      content: question.phrase.join(joiner),
+    })
+  }
 
 
   return (
     <div className="w-full flex flex-col h-full">
-      <audio ref={audioRef} onEnded={audioPlayComplete} onCanPlayThrough={canPlay}></audio>
-      <div>{renderAnswers()}</div>
+      <div><Result answers={state.answers} spaced={spaced} /></div>
+      {renderAudio()}
       <div className="mt-auto ">
         {renderAnswerSet()}
       </div>
@@ -222,9 +140,10 @@ interface GameProps {
   wpm: number,
   fwpm: number,
   turns: number,
+  spaced: boolean,
 }
 
-export function Game({getQuestion, onGameUpdate, onCancelGame, wpm, fwpm, turns}: GameProps) {
+export function Game({getQuestion, onGameUpdate, onCancelGame, wpm, fwpm, turns, spaced}: GameProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [state, setState] = useState({
       turnIdx: 0,
@@ -244,12 +163,17 @@ export function Game({getQuestion, onGameUpdate, onCancelGame, wpm, fwpm, turns}
   }
 
   return (
-    <div className="flex flex-col w-full md:max-w-xl mx-auto p-4 h-screen">
-      <div className="grid grid-cols-2 justify-items-center">
-        <div>Score: {state.score}</div>
-        <div>Turn {state.turnIdx + 1}/50</div>
+    <div className="absolute inset-0">
+      <div className="flex flex-col p-4 h-full">
+        <div className="flex flex-row justify-between w-full eightbit-font">
+          <div>{state.score}</div>
+          <div>{state.turnIdx + 1}/50</div>
+        </div>
+        <div className="w-full flex flex-col justify-between h-full">
+          <div></div>
+          <Turn wpm={wpm} fwpm={fwpm} turnIdx={state.turnIdx} question={state.currentQuestion} onComplete={onTurnComplete} spaced={spaced} />
+        </div>
       </div>
-      <Turn wpm={wpm} fwpm={fwpm} turnIdx={state.turnIdx} question={state.currentQuestion} onComplete={onTurnComplete} />
       <button className="absolute top-0 right-0 flex items-center justify-center rounded-md border border-gray-300 p-2" onClick={onCancelGame}>✖️</button>
     </div>
   )

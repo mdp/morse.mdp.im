@@ -18,7 +18,7 @@ export const gameList: {[key: string]: GameData} = {
         description: `In this game we will jumble up the 500 top words into groups of 3 for 50 turns.
         You'll hear each set of words then need to pick them from a list, in order of appearance.
         `,
-        spaced: true, turns: 50
+        spaced: true, turns: 50, wordPhraseLength: 3
     },
     "Callsigns": {
         title: "Callsigns", source: "/data/cwops_calls.json", type: "calls",
@@ -52,8 +52,12 @@ export default function GameMode({mode}:{mode: string}) {
                 ...state,
                 gameData: game
             })
-            console.log(p);
-            console.log(buildQuestionFromPhrases(p, { answerCount: 5, spaced: false }));
+        } else if (game.type === "words") {
+            game.wordList = data.words;
+            setState({
+                ...state,
+                gameData: game
+            })
         }
         dataLoaded = true
     }
@@ -74,6 +78,9 @@ export default function GameMode({mode}:{mode: string}) {
       const game: GameData = state.gameData;
       if (game.phraseList) {
           return buildQuestionFromPhrases(state.gameData.phraseList, {spaced: game.spaced, answerCount: 5})
+      }
+      if (game.wordList) {
+          return buildQuestionFromWords(state.gameData.wordList, {wordCount: game.wordPhraseLength, spaced: game.spaced, answerCount: 5})
       }
   }
 
@@ -107,7 +114,7 @@ export default function GameMode({mode}:{mode: string}) {
           return renderIndexPage();
       } else {
           return <>
-              <Game wpm={wpm} fwpm={fwpm} getQuestion={getQuestion} onGameUpdate={gameUpdate} onCancelGame={cancelGame} turns={TURNS} />
+              <Game wpm={wpm} fwpm={fwpm} getQuestion={getQuestion} onGameUpdate={gameUpdate} onCancelGame={cancelGame} turns={TURNS} spaced={state.gameData.spaced}/>
           </>
       }
   }
