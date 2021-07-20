@@ -1,8 +1,12 @@
-import { useRef, useState } from 'react'
+import { MouseEventHandler, useRef, useState } from 'react'
 import {Question}  from '../../lib/head_copy_buiders';
 import Result from './result';
 import MorseAudio from '../morse_audio';
 
+
+const SCORE_BASE_CORRECT = 500
+const SCORE_BASE_CORRECT_PHRASE = 100
+const SCORE_WPM_BONUS = 5
 const HIGHEST_SCORE = 500;
 const LOWEST_SCORE = 200;
 const FASTEST_RESPONSE = 1500; // time to get the full points
@@ -10,26 +14,12 @@ const SLOWEST_RESPONSE = 5000; // time after a correct answer gets lowest score
 
 export function AnswerSet({words, pick, onAnswer}) {
 
-  const start = Date.now();
-
-  function score() {
-    const duration = Date.now() - start;
-    if (duration < FASTEST_RESPONSE) {
-      return HIGHEST_SCORE;
-    } else if (duration < SLOWEST_RESPONSE) {
-      const factor = 1 - ((duration - FASTEST_RESPONSE) / (SLOWEST_RESPONSE - FASTEST_RESPONSE));
-      const bonus = Math.floor((HIGHEST_SCORE - LOWEST_SCORE) * factor);
-      return LOWEST_SCORE + bonus;
-    }
-    return LOWEST_SCORE;
-  }
-
   const onClick = (e) => {
     const selected = e.target.innerText;
     if (selected === pick) {
-      onAnswer(score(), pick, selected);
+      onAnswer(pick, selected);
     } else {
-      onAnswer(0, pick, selected);
+      onAnswer(pick, selected);
     }
   }
 
@@ -48,27 +38,55 @@ interface TurnProps {
   question: Question,
   turnIdx: number,
   onComplete: Function,
+  onNext: MouseEventHandler<HTMLButtonElement>,
   wpm: number,
   fwpm: number,
   spaced: boolean,
 }
 
-export function Turn({question, turnIdx, onComplete, wpm, fwpm, spaced}: TurnProps) {
+export function Turn({question, turnIdx, onComplete, onNext, wpm, fwpm, spaced}: TurnProps) {
   const wordSetLength = question.phrase.length;
   const defaultState = {
       audioState: "empty",
       wordIdx: 0,
       turnIdx: -1,
       score: 0,
+      startedAt: Date.now(),
       answers: [],
       content: null
   }
-
 
   // Default state
   const [state, setState] = useState({
     ...defaultState,
   })
+
+  const start = Date.now();
+
+  function score(): [score: number, correctlyAnswered: boolean] {
+    let score = 0;
+    // Extend time depending on how many answer sets we provide
+    const fasterResponse = (state.wordIdx + 1) * FASTEST_RESPONSE; // Needed for the full time bonus
+    const partialPhrasePoints = Math.floor((SCORE_BASE_CORRECT / (state.wordIdx + 1)) * 0.5)
+    const duration = Date.now() - state.startedAt;
+    const correct = state.answers.map((a) => a[0]).join("") === state.answers.map((a) => a[1]).join("")
+    if (correct) {
+      score = SCORE_BASE_CORRECT
+    } else {
+      state.answers.forEach((set, idx) => {
+        let answer = set[idx];
+        if (answer[0] === answer[1]) {
+          score = score + partialPhrasePoints
+        }
+      })
+    }
+
+    // Time penalty
+    // WPM Bonus
+    const speedBonusFactor = fwpm / 10 // Every 10wpm bumps up the score by 1x
+
+    return [Math.floor(score * speedBonusFactor), correct]
+  }
 
   console.log("Turn", question, turnIdx, state)
 
@@ -77,22 +95,18 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm, spaced}: TurnPro
       setState({...state, audioState: "played"})
   }
 
-  function onAnswer(score, correctWord, wordSelected) {
+  function onAnswer(correctWord, wordSelected) {
     let wordIdx = state.wordIdx + 1;
-    console.log("Score", score);
     console.log(`${correctWord} : ${wordSelected}`);
-    const total = score + state.score
+    console.log(wordIdx)
+    if (wordSetLength <= state.wordIdx + 1) {
+      onComplete(score())
+    }
     setState({
       ...state,
-      score: total,
       answers: [...state.answers, [correctWord, wordSelected]],
       wordIdx
     })
-    console.log("Total:", total);
-  }
-
-  function onNext() {
-    onComplete({score: state.score});
   }
 
   function renderAnswerSet() {
@@ -135,7 +149,7 @@ export function Turn({question, turnIdx, onComplete, wpm, fwpm, spaced}: TurnPro
 
 interface GameProps {
   getQuestion: (turnIdx: number) => Question,
-  onGameUpdate: (isComplete: boolean, score: number) => void,
+  onGameUpdate: (isComplete: boolean, {score, percentCorrect}: {score: number, percentCorrect: number}) => void,
   onCancelGame: () => void,
   wpm: number,
   fwpm: number,
@@ -148,33 +162,49 @@ export function Game({getQuestion, onGameUpdate, onCancelGame, wpm, fwpm, turns,
   const [state, setState] = useState({
       turnIdx: 0,
       score: 0,
+      correctAnswers: 0,
       currentQuestion: getQuestion(0),
   })
 
-  function onTurnComplete({score}) {
-    let isComplete = state.turnIdx + 1 < turns;
+  function onTurnComplete([score, correctlyAnswered]) {
+    let isComplete = state.turnIdx + 1 >= turns;
+    const totalScore = state.score + score;
+    let correctAnswers = state.correctAnswers
+    if (correctlyAnswered) {
+      correctAnswers++
+    }
+    setState({
+      ...state,
+      score: totalScore,
+      correctAnswers
+    });
+    const percentCorrect = Math.floor((correctAnswers/(state.turnIdx + 1))*100)
+    onGameUpdate(isComplete, {score: totalScore, percentCorrect});
+  }
+
+  function onNext() {
     setState({
       ...state,
       turnIdx: state.turnIdx + 1,
-      score: state.score + score,
       currentQuestion: getQuestion(state.turnIdx + 1),
     });
-    onGameUpdate(isComplete, state.score + score);
   }
+  
+  console.log(turns)
 
   return (
     <div className="absolute inset-0">
       <div className="flex flex-col p-4 h-full">
         <div className="flex flex-row justify-between w-full eightbit-font">
           <div>{state.score}</div>
-          <div>{state.turnIdx + 1}/50</div>
+          <div>{state.turnIdx + 1}/{turns}</div>
+          <button className="" onClick={onCancelGame}>X</button>
         </div>
         <div className="w-full flex flex-col justify-between h-full">
-          <div></div>
-          <Turn wpm={wpm} fwpm={fwpm} turnIdx={state.turnIdx} question={state.currentQuestion} onComplete={onTurnComplete} spaced={spaced} />
+          <div>&nbsp;</div>
+          <Turn wpm={wpm} fwpm={fwpm} turnIdx={state.turnIdx} question={state.currentQuestion} onComplete={onTurnComplete} onNext={onNext} spaced={spaced} />
         </div>
       </div>
-      <button className="absolute top-0 right-0 flex items-center justify-center rounded-md border border-gray-300 p-2" onClick={onCancelGame}>✖️</button>
     </div>
   )
 
