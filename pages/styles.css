@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-}
-
 span.blur {
   filter: blur(6px);
   -webkit-filter: blur(6px);
