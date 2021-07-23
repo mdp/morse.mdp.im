@@ -1,14 +1,14 @@
-import { gameList } from '../../components/head-copy/game_mode';
+import gameList from '../../lib/head_copy/game_list';
 import Link from 'next/link'
 
 export default function Index() {
 
   function listGames() {
-    return Object.keys(gameList).map((key) =>
-      <li className="items-center my-2 px-4" key={key}>
-        <Link href={`/head-copy/play?mode=${key}`}>
+    return gameList.map((game) =>
+      <li className="items-center my-2 px-4" key={game.id}>
+        <Link href={`/head-copy/play?mode=${game.id}`}>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4"
-          >{gameList[key].title}</button>
+          >{game.title}</button>
         </Link>
       </li>
     )

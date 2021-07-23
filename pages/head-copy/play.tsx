@@ -1,5 +1,5 @@
 import { useRouter } from 'next/dist/client/router';
-import GameMode from '../../components/head-copy/game_mode';
+import GameMode from '../../components/head-copy/game_runner';
 
 export default function Play() {
     const router = useRouter();

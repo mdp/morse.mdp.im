@@ -12,7 +12,8 @@ const rl = readline.createInterface({
 });
 
 function clean(txt) {
-    return txt.replace(/[^a-zA-Z0-9\<\>]+/, "")
+    txt = txt.split("[")[0].trim()
+    return txt.replace(/[^a-zA-Z0-9\s\<\>]+/, "").trim()
 }
 
 rl.on('line', (line) => {
@@ -22,7 +23,8 @@ rl.on('line', (line) => {
 rl.on('close', (line) => {
     // output json
     let output = {};
-    output[args[1]] = list;
+    const uniqueList = list.filter((value, index, self) => self.indexOf(value) === index)
+    output[args[1]] = uniqueList;
     process.stdout.write(JSON.stringify(output));
     process.exit(0);
 });
