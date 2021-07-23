@@ -1,4 +1,4 @@
-import { Question } from "../gamelib";
+import { Question } from "./types";
 
 export default abstract class Game {
     abstract readonly turns: number
@@ -16,8 +16,6 @@ export default abstract class Game {
     // TurnIdx can usually be ignored unless we want to ensure
     // that questions are unique or have a particular order
     abstract getQuestion(turnIdx: number): Question;
-
-
 
     constructor() {
         this.state = "empty"
