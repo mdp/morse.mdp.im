@@ -1,5 +1,5 @@
 import { Question } from "./types";
-import Game from "./game";
+import GameFetch from "./game_fetch";
 import { randomPick, similar } from "./utils";
 
 // Represents all the possible phrases and and answer corpus for each column
@@ -57,7 +57,7 @@ function buildQuestionFromCallList(callList: CallList,
     return q;
 }
 
-export default class CallSignGame extends Game {
+export default class CallSignGame extends GameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number

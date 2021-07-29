@@ -1,5 +1,5 @@
 import { Question } from "./types"
-import Game from "./game"
+import GameFetch from "./game_fetch"
 import { randomPick, similar } from "./utils"
 
 export interface PhraseList {
@@ -39,7 +39,7 @@ export const questionFromPhraseList = function(phraseList: PhraseList,
       return q;
   }
 
-export default class PhraseGame extends Game {
+export default class PhraseGame extends GameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number

@@ -13,7 +13,7 @@ span.blur:hover {
 }
 
 a {
-  @apply text-blue-600
+  @apply text-blue-400
 }
 
 @font-face {

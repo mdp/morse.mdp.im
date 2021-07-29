@@ -1,5 +1,5 @@
 import { useRouter } from 'next/dist/client/router';
-import GameMode from '../../components/head-copy/game_runner';
+import GameRunner from '../../components/head-copy/game_runner';
 
 export default function Play() {
     const router = useRouter();
@@ -8,7 +8,7 @@ export default function Play() {
 
     //TODO: Handle error if game doesn't exist
     if (mode) {
-        return <GameMode mode={[].concat(query.mode)[0]}></GameMode>
+        return <GameRunner mode={[].concat(query.mode)[0]}></GameRunner>
     } else {
         return <></>
     }

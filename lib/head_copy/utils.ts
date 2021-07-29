@@ -13,6 +13,14 @@ export function shuffle_array(array: any[]): any[] {
 export function randomPick(array: any[]): string {
     return array[Math.floor(Math.random() * array.length)];
 }
+
+export function unique(arr: any[]): any[] {
+    return arr.filter((value, index, self) => self.indexOf(value) === index)
+}
+  
+export function randomChar(list: string): string {
+    return list[Math.floor(Math.random() * list.length)];
+}
   
 export function similar(word: string, source: string[], amount: number): string[] {
     const sim = source.concat().sort(function (a, b): number {
@@ -26,7 +34,7 @@ export function similar(word: string, source: string[], amount: number): string[
         return 0;
     })
     // Get the top 2x similar words
-    const results = sim.slice(1, amount * 2 +1)
+    const results = sim.slice(1, amount * 2 +1).sort()
     // Mix them up
     shuffle_array(results)
 

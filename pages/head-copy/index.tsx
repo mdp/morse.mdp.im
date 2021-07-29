@@ -6,7 +6,7 @@ export default function Index() {
   function listGames() {
     return gameList.map((game) =>
       <li className="items-center my-2 px-4" key={game.id}>
-        <Link href={`/head-copy/play?mode=${game.id}`}>
+        <Link href={`/head-copy/play.html?mode=${game.id}`}>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4"
           >{game.title}</button>
         </Link>

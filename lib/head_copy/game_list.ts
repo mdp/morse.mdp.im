@@ -1,6 +1,7 @@
 import CallSignGame from "./callsign_game";
 import Game from "./game";
 import PhraseGame from "./phrase_game";
+import RandomFive from "./random_five";
 import WordGame from "./word_game";
 
 export interface GameDefinition {
@@ -19,6 +20,11 @@ const gameList: GameDefinition[] = [
         questionPool: new CallSignGame('/data/dxcc100_6char.json', {
             spaced: false, turns: 50
         })
+    },
+    {
+        id: 'random_five', title: "Random 5 Characters",
+        description: `Simple game of 5 characters`,
+        questionPool: new RandomFive({turns: 50})
     },
     {
         id: 'cwops_calls', title: "CWOps Callsigns",
