@@ -56,6 +56,7 @@ export default class WordGame extends Game {
 
     loadData(data): void {
         this.wordList = wordsToPhraseList(data['content'])
+        this.isReady = true;
     }
 
     unloadData(): void {

@@ -47,7 +47,7 @@ export default function Highscores() {
         <div className="text-xs">
             {getHighscoreList()}
         </div>
-        <Link href={`/head-copy.html`}>
+        <Link href={`/head-copy`}>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Done</button>
         </Link>
         </div>

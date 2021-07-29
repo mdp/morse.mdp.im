@@ -5,9 +5,6 @@ export default abstract class GameFetch extends Game {
     abstract readonly turns: number
     abstract readonly type: string
     abstract source: string
-    isReady: boolean
-    error: any
-    state: string | null
 
     abstract loadData(data: any): void;
 
@@ -28,7 +25,6 @@ export default abstract class GameFetch extends Game {
             } else {
                 res.json().then(data => {
                     this.loadData(data)
-                    this.isReady = true;
                     this.state = 'loaded'
                     done()
                 })

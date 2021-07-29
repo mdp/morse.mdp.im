@@ -75,6 +75,7 @@ export default class CallSignGame extends GameFetch {
     loadData(data): void {
         console.log(data)
         this.callList = buildCallsignQuestionPool(data['content'])
+        this.isReady = true;
     }
 
     unloadData(): void {

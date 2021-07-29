@@ -56,6 +56,7 @@ export default class PhraseGame extends GameFetch {
 
     loadData(data): void {
         this.phraseList = phrasesToPhraseList(data['content'])
+        this.isReady = true;
     }
 
     unloadData(): void {

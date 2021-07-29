@@ -116,7 +116,7 @@ export default function GameRunner({ mode }: { mode: string }) {
             <h3>Score: {state.lastGameScore}</h3>
             <h3>Percent Correct: {state.lastGamePercent}</h3>
             <h3>Correct Decodes: {state.lastGameCorrectlyDecoded}</h3>
-            <Link href={`/head-copy/highscores.html?mode=${mode}&scoretime=${state.lastGameAt}`}>
+            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${state.lastGameAt}`}>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Play Again</button>
