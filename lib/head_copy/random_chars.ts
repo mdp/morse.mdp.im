@@ -1,6 +1,6 @@
 import { Question } from "./types";
 import Game from "./game";
-import { randomChar, shuffle_array } from "./utils";
+import { randomChar, shuffle_array as shuffleArray } from "./utils";
 
 export const letters="abcdefghijklmnopqrstuvwxyz";
 
@@ -8,7 +8,7 @@ const evilSwaps = {
     "a": "n",
     "b": "dvu",
     "c": "kqy",
-    "d": "bud",
+    "d": "bu",
     "e": "it",
     "f": "l",
     "g": "z",
@@ -31,20 +31,42 @@ const evilSwaps = {
     "x": "b",
     "y": "qc",
     "z": "g",
+    "0": "91",
+    "1": "9",
+    "2": "3",
+    "3": "2",
+    "4": "59",
+    "5": "4",
+    "6": "1",
+    "7": "3",
+    "8": "7",
+    "9": "40",
 }
 
-const swapMasks = ["10101",
-             "01010",
-             "10100",
-             "01011",
-             "11010",
-             "00101",
-]
+function getSwapMasks(power: number): number[] {
+    const maskCount = Math.pow(2, power)
+    const masks = []
+    
+    // Leave off the first mask (no changes, eg. "0000")
+    for (let i=1; i<maskCount; i++) {
+        masks.push(i);
+    }
+    shuffleArray(masks)
+    return masks
+}
+
+// Get a mask from the int padded to the desired length
+function intToMask(i: number, len: number): number[] {
+    const binArr = i.toString(2).split("").map((m) => parseInt(m,10))
+    for (let j = binArr.length; j < len; j++) {
+        binArr.unshift(0)
+    }
+    return binArr
+}
 
 
 
-function evilSwap(str: string, mask: string): string[] {
-    const maskArr = mask.split("").map((m) => parseInt(m, 10))
+function evilSwap(str: string, maskArr: number[]): string[] {
     const result = []
     for (let j=0; j < maskArr.length; j++) {
         if (maskArr[j] === 1) {
@@ -62,11 +84,12 @@ function evilSwap(str: string, mask: string): string[] {
 }
 
 function getAnswers(str: string): string[] {
-    const masks = shuffle_array(swapMasks)
+    const strLen = str.length
+    const masks = getSwapMasks(strLen)
     const answers = []
     for (let k=0; k < 4; k++) {
         const currentMask = masks[k];
-        answers.push(evilSwap(str, currentMask).join(""))
+        answers.push(evilSwap(str, intToMask(currentMask, strLen)).join(""))
     }
     answers.push(str)
     return answers
@@ -80,8 +103,8 @@ function getGroup(length: number): string {
     return group.join("")
 }
 
-function buildQuestionRandomGroup({spaced}: {spaced: boolean}): Question {
-    const pick = getGroup(5)
+function buildQuestionRandomGroup({spaced, length}: {spaced: boolean, length: number}): Question {
+    const pick = getGroup(length)
     const answers = getAnswers(pick)
     const q: Question = {
         phrase: [pick],
@@ -92,17 +115,18 @@ function buildQuestionRandomGroup({spaced}: {spaced: boolean}): Question {
 }
 
 
-// Could be vastly improved to support variable size, but good enough for now for testing
-export default class RandomFive extends Game {
-    readonly characters: string[]
+// TODO: Allow for character and numbers at some point (and maybe symbols)
+export default class RandomChars extends Game {
     readonly type: string
     readonly turns: number
+    readonly length: number
     isReady: boolean
 
-    constructor({turns}: {turns: number}) {
+    constructor({turns, length}: {turns: number, length: number}) {
         super()
         this.type = 'random';
         this.turns = turns;
+        this.length = length;
         this.isReady = true;
     }
 
@@ -119,7 +143,7 @@ export default class RandomFive extends Game {
     }
 
     getQuestion(turnIdx: number): Question {
-        return buildQuestionRandomGroup({spaced: false})
+        return buildQuestionRandomGroup({spaced: false, length: this.length})
     }
 
 }

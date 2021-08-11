@@ -1,8 +1,8 @@
-import RandomFive, { letters } from "./random_five";
+import RandomChars, { letters } from "./random_five";
 
 
 test('Getting back a random group question', () => {
-    const r = new RandomFive({turns: 50})
+    const r = new RandomChars({turns: 50, length: 5})
     const question = r.getQuestion(0);
     expect(question.phrase.length === 1)
     expect(question.answers.length === 5)

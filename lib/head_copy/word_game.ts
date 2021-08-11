@@ -1,8 +1,7 @@
 
 import { Question } from "./types"
-import Game from "./game"
 import { randomPick, similar } from "./utils"
-import { phrasesToPhraseList } from "./phrase_game"
+import GameFetch from "./game_fetch"
 
 export interface WordList {
     words: string[],
@@ -37,7 +36,7 @@ export const questionFromWordList = function(wordList: WordList,
       return q;
   }
 
-export default class WordGame extends Game {
+export default class WordGame extends GameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number

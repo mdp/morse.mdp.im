@@ -166,6 +166,9 @@ export default function GameRunner({ mode }: { mode: string }) {
             </form>
 
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Click to Play</button>
+            <Link href={`/head-copy/highscores/?mode=${mode}`}>
+              <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
+            </Link>
             <Link href="/head-copy">
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3">Back to Menu</button>
             </Link>

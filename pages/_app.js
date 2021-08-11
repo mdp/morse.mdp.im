@@ -20,6 +20,9 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        <title>Morse.mdp.im</title>
+      </Head>
       <Component {...pageProps} />
     </>
   )

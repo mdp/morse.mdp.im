@@ -1,7 +1,7 @@
 import CallSignGame from "./callsign_game";
 import Game from "./game";
 import PhraseGame from "./phrase_game";
-import RandomFive from "./random_five";
+import RandomChars from "./random_chars";
 import WordGame from "./word_game";
 
 export interface GameDefinition {
@@ -24,7 +24,12 @@ const gameList: GameDefinition[] = [
     {
         id: 'random_five', title: "Random 5 Characters",
         description: `Simple game of 5 characters`,
-        questionPool: new RandomFive({turns: 50})
+        questionPool: new RandomChars({turns: 50, length: 5})
+    },
+    {
+        id: 'random_six', title: "Random 6 Characters",
+        description: `Simple game of 6 random characters`,
+        questionPool: new RandomChars({turns: 50, length: 6})
     },
     {
         id: 'cwops_calls', title: "CWOps Callsigns",
@@ -44,9 +49,9 @@ const gameList: GameDefinition[] = [
         })
     },
     {
-        id: "top_500_words", title: "Top 500 Words",
-        description: `The top 500 words in groups a 3`,
-        questionPool: new WordGame('/data/top_500_words.json', {
+        id: "3-words", title: "3 Words",
+        description: `2 to 7 letter words in groups a 3`,
+        questionPool: new WordGame('/data/2_7_letter_words.json', {
             spaced: true, turns: 50, phraseWordCount: 3
         })
     },
