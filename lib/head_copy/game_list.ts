@@ -14,9 +14,7 @@ export interface GameDefinition {
 const gameList: GameDefinition[] = [
     {
         id: 'dxcc100_6', title: "DXCC 100 6 Char Calls",
-        description: `In this game we will jumble up the 500 top words into groups of 3 for 50 turns.
-        You'll hear each set of words then need to pick them from a list, in order of appearance.
-        `,
+        description: `DXCC 100 6 Character Calls`,
         questionPool: new CallSignGame('/data/dxcc100_6char.json', {
             spaced: false, turns: 50
         })
@@ -49,10 +47,10 @@ const gameList: GameDefinition[] = [
         })
     },
     {
-        id: "3-words", title: "3 Words",
-        description: `2 to 7 letter words in groups a 3`,
+        id: "2-words", title: "2 Words",
+        description: `2 to 7 letter words in groups of 2`,
         questionPool: new WordGame('/data/2_7_letter_words.json', {
-            spaced: true, turns: 50, phraseWordCount: 3
+            spaced: true, turns: 50, phraseWordCount: 2
         })
     },
 ]

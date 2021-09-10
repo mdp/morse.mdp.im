@@ -1,4 +1,4 @@
-import RandomChars, { letters } from "./random_five";
+import RandomChars, { letters } from "./random_chars";
 
 
 test('Getting back a random group question', () => {

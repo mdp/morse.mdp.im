@@ -20,4 +20,4 @@ docker run --rm -it -v ~/.s3cfg:/root/.s3cfg -v $(pwd)/cache:/usr/src/app/cache 
 
 ## Generate and deploy the latest webstie
 
-`docker run --rm -it -v ~/.s3cfg:/root/.s3cfg  mpercival/morsenews ./build_and_deploy_site.sh`
+`yarn next build && yarn next export && aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*'`
