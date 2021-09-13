@@ -1,77 +1,84 @@
 import React, { useState } from 'react'
 import createPersistedState from 'use-persisted-state';
 
-import { Game }from './game'
-import { Question } from '../../lib/head_copy/types';
+import { QuestionComponent }from './question_component'
+import Game, { Answer, GameSettings } from '../../lib/head_copy/game'
 import Link from 'next/link';
-import { addTotalCharacterDecoded, setHighscore } from '../../lib/head_copy/highscore_storage';
-import gameList, { GameDefinition } from '../../lib/head_copy/game_list'
+import { addHighscore, addTotalCharacterDecoded } from '../../lib/head_copy/highscore_storage';
+import gameList from '../../lib/head_copy/game_list'
 
 const morseSettingsState = createPersistedState('morseSettings');
 
-export interface MorseSettings {
-  fwpm: number,
-  wpm: number,
-  freq: number,
-}
 const MINIMUM_WPM = 5;
 
 export default function GameRunner({ mode }: { mode: string }) {
-  const game: GameDefinition | null = gameList.find((a) => a.id === mode) || null
+  const game: Game | null = gameList.find((a) => a.id === mode) || null
 
-  const [morseSettings, setMorseSettings]: [MorseSettings, Function] = morseSettingsState({
+  const [morseSettings, setMorseSettings]: [GameSettings, Function] = morseSettingsState({
     wpm: 20,
     fwpm: 20,
     freq: 700,
   })
 
   const defaultState = {
-    gameState: "stopped",
-    questionData: null,
-    lastGameAt: null,
-    lastGameScore: null,
-    lastGamePercent: null,
-    lastGameCorrectlyDecoded: null,
-    questionIdx: 0,
+    runState: "stopped",
+    gameState: game.getInitialState(morseSettings),
+    lastScore: null,
     morseSettings,
+    question: null,
   }
 
   const [state, setState] = useState(defaultState)
 
-  if (!game.questionPool.isReady) {
-    game.questionPool.load(() => setState({...state, gameState: 'loaded'}))
+  if (!game.isReady) {
+    game.load(() => setState({...state, runState: 'loaded'}))
   }
 
-  function gameUpdate(isComplete: boolean, {score, percentCorrect, correctlyDecoded}) {
-    if (isComplete) {
-      const scoreAt = setHighscore(mode, score, morseSettings.fwpm, percentCorrect)
-      addTotalCharacterDecoded(correctlyDecoded) // Keep track for personal goals
-      setState({...state,
-        lastGameAt: scoreAt,
-        lastGameScore: score,
-        lastGamePercent: percentCorrect,
-        lastGameCorrectlyDecoded: correctlyDecoded,
-        gameState: "complete",
-        questionIdx: 0,
-      })
+  function gameComplete() {
+    const [ finalScore, charactersDecoded ] = game.getFinalScore(state.gameState)
+    addHighscore(finalScore)
+    addTotalCharacterDecoded(charactersDecoded) // Keep track for personal goals
+    setState({
+      ...state,
+      runState: "complete",
+      lastScore: finalScore,
+    })
+  }
+
+  function onTurnComplete(answers: Answer[]) {
+    // Update state with new score gameState
+    // Score answers with game
+    const gameState = game.onAnswer(answers, state.gameState)
+    setState({...state,
+      gameState
+    })
+  }
+
+  function onNextQuestion() {
+    // Get a new question and update state with it
+    if (state.gameState.isComplete) {
+      return gameComplete()
     }
-  }
-
-  function getQuestion(turn: number): Question {
-      return game.questionPool.getQuestion(turn);
+    const [question, gameState] = game.getQuestion(state.gameState);
+    setState({...state,
+      gameState,
+      question,
+    })
   }
 
   function startNewGame() {
+    const initialGameState = game.getInitialState(morseSettings);
+    const [question, gameState] = game.getQuestion(initialGameState);
     setState({...defaultState,
-      gameState: "running",
-      questionIdx: 0,
+      runState: "running",
+      gameState,
+      question,
     })
   }
 
   function stopGame() {
     setState({...state,
-      gameState: "stopped",
-      questionIdx: 0,
+      runState: "stopped",
     })
   }
 
@@ -106,26 +113,30 @@ export default function GameRunner({ mode }: { mode: string }) {
   }
 
   function render() {
-      if (!game.questionPool.isReady) {
+      if (!game.isReady) {
           return <div>Loading...</div>
-      } else if (state.gameState === "stopped" || state.gameState === "loaded") {
+      } else if (state.runState === "stopped" || state.runState === "loaded") {
           return renderIndexPage();
-      } else if (state.gameState == "complete") {
+      } else if (state.runState == "complete") {
+          const finalScore = state.lastScore;
           return <div className="container w-full md:max-w-xl mx-auto pt-5 px-4">
             <h1> Game Complete </h1>
-            <h3>Score: {state.lastGameScore}</h3>
-            <h3>Percent Correct: {state.lastGamePercent}</h3>
-            <h3>Correct Decodes: {state.lastGameCorrectlyDecoded}</h3>
-            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${state.lastGameAt}`}>
+            <h3>Score: {finalScore.score}</h3>
+            <h3>Percent Correct: {finalScore.percentCorrect}</h3>
+            <h3>Correct Decodes: {finalScore.charactersDecoded}</h3>
+            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${finalScore.ts}`}>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Play Again</button>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={stopGame}>Back</button>
           </div>
       } else {
-        console.log("play game")
           return <>
-              <Game morseSettings={morseSettings} getQuestion={getQuestion} onGameUpdate={gameUpdate} onCancelGame={stopGame} turns={game.questionPool.turns} />
+              <QuestionComponent
+                question={state.question} onCancelGame={stopGame} onAnswer={onTurnComplete}
+                onNext={onNextQuestion} score={state.gameState.score} progress={state.gameState.progress}
+                gameOver={state.gameState.isComplete}
+                />
           </>
       }
   }
@@ -179,9 +190,9 @@ export default function GameRunner({ mode }: { mode: string }) {
 
   }
   
-  console.log("QuestionPool", game.questionPool)
-  if (game.questionPool.error) {
-    return <div>Error {game.questionPool.error}</div>
+  console.log("QuestionPool", game)
+  if (game.error) {
+    return <div>Error {game.error}</div>
   }
 
   return (

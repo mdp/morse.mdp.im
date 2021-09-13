@@ -1,6 +1,6 @@
-import { Question } from "./types"
-import GameFetch from "./game_fetch"
-import { randomPick, similar } from "./utils"
+import { GameState, Question } from "../game"
+import { randomPick, similar } from "../utils"
+import { TurnBasedGameArgs, TurnBasedGameFetch, TurnBasedGameState } from "./turn_based_game"
 
 export interface PhraseList {
     phrases: string[][],
@@ -23,11 +23,15 @@ export const phrasesToPhraseList = function(phrases: string[]): PhraseList {
 }
 
 export const questionFromPhraseList = function(phraseList: PhraseList,
-    {answerCount, spaced}: {answerCount: number, spaced: boolean}): Question {
+    {answerCount, spaced}: {answerCount: number, spaced: boolean}, gameState: GameState): Question {
       const q: Question = {
+          id: Date.now(),
           phrase: [],
           answers: [],
           spaced,
+          wpm: gameState.wpm,
+          fwpm: gameState.fwpm,
+          freq: gameState.freq,
       }
       const phrasePick = randomPick(phraseList.phrases);
       for (let j=0; j < phrasePick.length; j++) {
@@ -39,19 +43,21 @@ export const questionFromPhraseList = function(phraseList: PhraseList,
       return q;
   }
 
-export default class PhraseGame extends GameFetch {
+export class PhraseGameTurns extends TurnBasedGameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number
+    readonly spaced: boolean
 
     isReady: boolean
     phraseList: PhraseList
 
-    constructor(source: string, {turns, spaced}: {turns: number, spaced: boolean}) {
-        super()
+    constructor({id, name, description, source, turns, spaced}: TurnBasedGameArgs) {
+        super({id, name, description})
         this.source = source
-        this.type = 'phrases'
+        this.type = 'phrases';
         this.turns = turns;
+        this.spaced = spaced;
     }
 
     loadData(data): void {
@@ -63,8 +69,8 @@ export default class PhraseGame extends GameFetch {
         this.phraseList = null;
     }
 
-    getQuestion(turnIdx: number): Question {
-        return questionFromPhraseList(this.phraseList, {answerCount: 5, spaced: true})
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
+        return [questionFromPhraseList(this.phraseList, {answerCount: 5, spaced: true}, gameState), gameState]
     }
 
 }

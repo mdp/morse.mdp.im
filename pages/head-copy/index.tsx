@@ -8,7 +8,7 @@ export default function Index() {
       <li className="items-center my-2 px-4" key={game.id}>
         <Link href={`/head-copy/play/?mode=${game.id}`}>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4"
-          >{game.title}</button>
+          >{game.name}</button>
         </Link>
       </li>
     )

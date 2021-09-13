@@ -1,5 +1,7 @@
+import { Answer } from "../../lib/head_copy/game";
+
 interface ResultProps {
-    answers: string[][], // [[correctWord, selection], ...]
+    answers: Answer[]
     spaced: boolean
 }
 
@@ -10,11 +12,11 @@ export default function Result({answers, spaced}: ResultProps) {
         const selectedWords = [];
         for (let i=0; i < answers.length; i++) {
             let answer = answers[i];
-            keyWords.push(<span key={"key" + i} className='correct'>{answer[0]}{space}</span>)
-            if (answer[0] === answer[1]) {
-                selectedWords.push(<span key={"selection" + i} className='correct'>{answer[1]}{space}</span>)
+            keyWords.push(<span key={"key" + i} className='correct'>{answer.actual}{space}</span>)
+            if (answer.actual === answer.selected) {
+                selectedWords.push(<span key={"selection" + i} className='correct'>{answer.actual}{space}</span>)
             } else {
-                selectedWords.push(<span key= {"selection" + i} className='wrong'><span style={{ color: 'red' }}>{answer[1]}{space}</span></span>)
+                selectedWords.push(<span key= {"selection" + i} className='wrong'><span style={{ color: 'red' }}>{answer.selected}{space}</span></span>)
             }
         }
         return {keys: keyWords, selections: selectedWords}

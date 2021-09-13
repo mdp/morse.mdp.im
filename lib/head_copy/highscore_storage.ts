@@ -1,42 +1,28 @@
 export interface Highscore {
-    score: number,
-    wpm: number,
-    createdAt: Date,
-    percentCorrect: number,
+    mode: string
+    score: number
+    wpm: number
+    ts: number
+    percentCorrect?: number
 }
 
-const MAX_RECORDS_PER_KEY = 500
+const MAX_RECORDS = 1000
 
+const HIGHSCORE_KEY = "HighScoreDB"
 const TOTAL_DECODED_KEY = "TotalCharactersDecoded"
 
 export function getHighscores(key: string): Highscore[] {
-    const hsArr = JSON.parse(window.localStorage.getItem(key) || "[]")
-    hsArr.sort((a, b) => b[0] - a[0]);
-    return hsArr.map((h) => {
-        return {
-            score: h[0],
-            wpm: h[1],
-            percentCorrect: h[2],
-            createdAt: new Date(h[3]*1000),
-        }
-    })
+    const hsArr: Highscore[] = JSON.parse(window.localStorage.getItem(HIGHSCORE_KEY) || "[]");
+    return hsArr.filter((h) => h.mode === key).sort((a,b) => b.ts - a.ts)
 }
 
-export function setHighscore(key, score, wpm, percentCorrect): number {
-    let records = getHighscores(key)
-    if (records.length > MAX_RECORDS_PER_KEY - 1) {
-        records = records.slice(0, MAX_RECORDS_PER_KEY - 1)
+export function addHighscore(hs: Highscore) {
+    let hsArr: Highscore[] = JSON.parse(window.localStorage.getItem(HIGHSCORE_KEY) || "[]");
+    if (hsArr.length > MAX_RECORDS) {
+        hsArr = hsArr.sort((a,b) => b.ts - a.ts).slice(0, MAX_RECORDS - 1)
     }
-    const ts = Math.floor(Date.now() / 1000)
-    const highscores = records.map((r) => [r.score, r.wpm, r.percentCorrect, r.createdAt.getTime()/1000])
-    highscores.push([
-        score,
-        wpm,
-        percentCorrect,
-        ts,
-    ])
-    window.localStorage.setItem(key, JSON.stringify(highscores))
-    return ts
+    hsArr.push(hs)
+    window.localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(hsArr))
 }
 
 export function getTotalCharacterDecoded(): number {

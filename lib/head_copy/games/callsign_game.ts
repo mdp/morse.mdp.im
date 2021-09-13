@@ -1,6 +1,6 @@
-import { Question } from "./types";
-import GameFetch from "./game_fetch";
-import { randomPick, similar } from "./utils";
+import { GameState, Question } from "../game";
+import { randomPick, similar } from "../utils";
+import { TurnBasedGameArgs, TurnBasedGameFetch, TurnBasedGameState } from "./turn_based_game";
 
 // Represents all the possible phrases and and answer corpus for each column
 export interface CallList {
@@ -40,11 +40,15 @@ function buildCallsignQuestionPool(callSigns: string[]): CallList {
 }
 
 function buildQuestionFromCallList(callList: CallList,
-    { answerCount, spaced }: { answerCount: number, spaced: boolean }): Question {
+    { answerCount, spaced }: { answerCount: number, spaced: boolean}, gameState: GameState): Question {
     const q: Question = {
+        id: Date.now(),
         phrase: [],
         answers: [],
         spaced,
+        wpm: gameState.wpm,
+        fwpm: gameState.fwpm,
+        freq: gameState.freq,
     }
     const phrasePick = randomPick(callList.phrases);
     const phraseLen = phrasePick.length
@@ -57,19 +61,21 @@ function buildQuestionFromCallList(callList: CallList,
     return q;
 }
 
-export default class CallSignGame extends GameFetch {
+export class CallSignGameTurns extends TurnBasedGameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number
+    readonly spaced: boolean
 
     isReady: boolean
     callList: CallList
 
-    constructor(source: string, {turns, spaced}: {turns: number, spaced: boolean}) {
-        super()
+    constructor({id, name, description, source, turns, spaced}: TurnBasedGameArgs) {
+        super({id, name, description})
         this.source = source
         this.type = 'calls';
         this.turns = turns;
+        this.spaced = spaced;
     }
 
     loadData(data): void {
@@ -82,8 +88,8 @@ export default class CallSignGame extends GameFetch {
         this.callList = null;
     }
 
-    getQuestion(turnIdx: number): Question {
-        return buildQuestionFromCallList(this.callList, {answerCount: 5, spaced: false})
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
+        return [buildQuestionFromCallList(this.callList, {answerCount: 5, spaced: false}, gameState), gameState]
     }
 
 }

@@ -1,8 +1,11 @@
-import { Question } from "./types";
-import Game from "./game";
-import { randomChar, shuffle_array as shuffleArray } from "./utils";
+import { randomChar, shuffle_array as shuffleArray } from "../utils";
+import { DefaultGameArgs, GameState, Question } from "../game";
+import { TurnBasedGame } from "./turn_based_game";
 
-export const letters="abcdefghijklmnopqrstuvwxyz";
+
+export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+export const LETTERS_AND_NUMBERS = "abcdefghijklmnopqrstuvwxyz0123456789";
+export const NUMBERS = "0123456789";
 
 const evilSwaps = {
     "a": "n",
@@ -66,7 +69,7 @@ function intToMask(i: number, len: number): number[] {
 
 
 
-function evilSwap(str: string, maskArr: number[]): string[] {
+function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
     const result = []
     for (let j=0; j < maskArr.length; j++) {
         if (maskArr[j] === 1) {
@@ -74,7 +77,7 @@ function evilSwap(str: string, maskArr: number[]): string[] {
             if (swap) {
                 result.push(randomChar(swap))
             } else {
-                result.push(randomChar(letters))
+                result.push(randomChar(charSet))
             }
         } else {
             result.push(str[j])
@@ -83,50 +86,61 @@ function evilSwap(str: string, maskArr: number[]): string[] {
     return result
 }
 
-function getAnswers(str: string): string[] {
+function getAnswers(str: string, charSet: string): string[] {
     const strLen = str.length
     const masks = getSwapMasks(strLen)
     const answers = []
     for (let k=0; k < 4; k++) {
         const currentMask = masks[k];
-        answers.push(evilSwap(str, intToMask(currentMask, strLen)).join(""))
+        answers.push(evilSwap(str, charSet, intToMask(currentMask, strLen)).join(""))
     }
     answers.push(str)
     return answers
 }
 
-function getGroup(length: number): string {
+function getGroup(length: number, charSet: string): string {
     const group = []
     for (let i=0; i<length; i++) {
-        group.push(randomChar(letters))
+        group.push(randomChar(charSet))
     }
     return group.join("")
 }
 
-function buildQuestionRandomGroup({spaced, length}: {spaced: boolean, length: number}): Question {
-    const pick = getGroup(length)
-    const answers = getAnswers(pick)
+function buildQuestionRandomGroup({spaced, length, charSet}: {spaced: boolean, length: number, charSet: string}, gameState: GameState): Question {
+    const pick = getGroup(length, charSet)
+    const answers = getAnswers(pick, charSet)
     const q: Question = {
+        id: Date.now(),
         phrase: [pick],
         answers:[answers],
         spaced,
+        wpm: gameState.wpm,
+        fwpm: gameState.fwpm,
+        freq: gameState.freq,
     }
     return q
 }
 
+interface RandomCharsArgs extends DefaultGameArgs {
+    turns: number
+    length: number
+    charSet: string
+}
 
 // TODO: Allow for character and numbers at some point (and maybe symbols)
-export default class RandomChars extends Game {
+export class RandomCharsTurns extends TurnBasedGame {
     readonly type: string
+    readonly charSet: string
     readonly turns: number
     readonly length: number
     isReady: boolean
 
-    constructor({turns, length}: {turns: number, length: number}) {
-        super()
+    constructor({id, name, description, turns, length, charSet}: RandomCharsArgs) {
+        super({id, name, description})
         this.type = 'random';
         this.turns = turns;
         this.length = length;
+        this.charSet = charSet;
         this.isReady = true;
     }
 
@@ -142,8 +156,8 @@ export default class RandomChars extends Game {
         return
     }
 
-    getQuestion(turnIdx: number): Question {
-        return buildQuestionRandomGroup({spaced: false, length: this.length})
+    getQuestion(gameState: GameState): [Question, GameState] {
+        return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
     }
 
 }

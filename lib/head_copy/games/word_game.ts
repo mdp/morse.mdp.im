@@ -1,7 +1,7 @@
 
-import { Question } from "./types"
-import { randomPick, similar } from "./utils"
-import GameFetch from "./game_fetch"
+import { GameState, Question } from "../game"
+import { randomPick, similar } from "../utils"
+import { TurnBasedGameArgs, TurnBasedGameFetch, TurnBasedGameState } from "./turn_based_game"
 
 export interface WordList {
     words: string[],
@@ -20,11 +20,15 @@ export const wordsToPhraseList = function(wordList: string[]): WordList {
 }
 
 export const questionFromWordList = function(wordList: WordList,
-    {answerCount, spaced, phraseWordCount}: {answerCount: number, spaced: boolean, phraseWordCount: number}): Question {
+    {answerCount, spaced, phraseWordCount}: {answerCount: number, spaced: boolean, phraseWordCount: number}, gameState: GameState): Question {
       const q: Question = {
+          id: Date.now(),
           phrase: [],
           answers: [],
           spaced,
+          wpm: gameState.wpm,
+          fwpm: gameState.fwpm,
+          freq: gameState.freq,
       }
       const wordPicks = []
       for (let i=0; i < phraseWordCount; i++) {
@@ -36,20 +40,27 @@ export const questionFromWordList = function(wordList: WordList,
       return q;
   }
 
-export default class WordGame extends GameFetch {
+
+interface WordGameArgs extends TurnBasedGameArgs {
+    phraseWordCount: number
+}
+
+export class WordGameTurns extends TurnBasedGameFetch {
     readonly source: string
     readonly type: string
     readonly turns: number
+    readonly spaced: boolean
     readonly phraseWordCount: number
 
     isReady: boolean
     wordList: WordList
 
-    constructor(source: string, {turns, spaced, phraseWordCount}: {turns: number, spaced: boolean, phraseWordCount: number}) {
-        super()
-        this.type = 'words'
+    constructor({id, name, description, source, turns, spaced, phraseWordCount}: WordGameArgs) {
+        super({id, name, description})
         this.source = source
-        this.turns =  turns;
+        this.type = 'phrases';
+        this.turns = turns;
+        this.spaced = spaced;
         this.phraseWordCount = phraseWordCount;
     }
 
@@ -62,8 +73,8 @@ export default class WordGame extends GameFetch {
         this.wordList = null;
     }
 
-    getQuestion(turnIdx: number): Question {
-        return questionFromWordList(this.wordList, {answerCount: 5, spaced: true, phraseWordCount: this.phraseWordCount})
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
+        return [questionFromWordList(this.wordList, {answerCount: 5, spaced: true, phraseWordCount: this.phraseWordCount}, gameState), gameState]
     }
 
 }
