@@ -1,6 +1,7 @@
 import { randomChar, shuffle_array as shuffleArray } from "../utils";
 import { DefaultGameArgs, GameState, Question } from "../game";
 import { TurnBasedGame } from "./turn_based_game";
+import { StreakBasedGame } from "./streak_game";
 
 
 export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
@@ -139,6 +140,46 @@ export class RandomCharsTurns extends TurnBasedGame {
         super({id, name, description})
         this.type = 'random';
         this.turns = turns;
+        this.length = length;
+        this.charSet = charSet;
+        this.isReady = true;
+    }
+
+    load(): void {
+        return
+    }
+
+    loadData(data): void {
+        return
+    }
+
+    unloadData(): void {
+        return
+    }
+
+    getQuestion(gameState: GameState): [Question, GameState] {
+        return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
+    }
+
+}
+
+interface RandomCharsStreakArgs extends DefaultGameArgs {
+    lives: number
+    length: number
+    charSet: string
+}
+
+export class RandomCharsStreak extends StreakBasedGame {
+    readonly type: string
+    readonly charSet: string
+    readonly lives: number
+    readonly length: number
+    isReady: boolean
+
+    constructor({id, name, description, lives, length, charSet}: RandomCharsStreakArgs) {
+        super({id, name, description})
+        this.type = 'random';
+        this.lives = lives;
         this.length = length;
         this.charSet = charSet;
         this.isReady = true;

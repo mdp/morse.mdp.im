@@ -1,6 +1,6 @@
 import { CallSignGameTurns } from "./games/callsign_game";
 import Game from "./game";
-import { RandomCharsTurns, LETTERS } from "./games/random_chars";
+import { RandomCharsTurns, LETTERS, RandomCharsStreak } from "./games/random_chars";
 import { WordGameTurns } from "./games/word_game";
 
 const gameList: Game[] = [
@@ -18,6 +18,14 @@ const gameList: Game[] = [
         description: "5 Letters as random",
         charSet: LETTERS,
         turns: 50,
+        length: 5,
+    }),
+    new RandomCharsStreak({
+        id: "random_five_streak",
+        name: "Random 5 Characters Streak",
+        description: "5 Letters as random",
+        charSet: LETTERS,
+        lives: 3,
         length: 5,
     }),
     new RandomCharsTurns({

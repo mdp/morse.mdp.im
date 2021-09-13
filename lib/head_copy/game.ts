@@ -17,7 +17,6 @@ export interface Question {
     freq: number
 }
 export interface GameState {
-    turnIdx: number
     score: number
     charactersDecoded: number
     progress: string

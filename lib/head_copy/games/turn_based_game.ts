@@ -4,6 +4,7 @@ import { Highscore } from "../highscore_storage";
 
 export interface TurnBasedGameState extends GameState {
     scoreResults: ScoreResult[]
+    turnIdx: number
 }
 
 export interface TurnBasedGameArgs extends DefaultGameArgs {
