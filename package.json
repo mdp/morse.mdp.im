@@ -8,7 +8,8 @@
     "build_podcast_rss": "node podcast/rss.js",
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "rm -rf out && next build && next export && aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*'"
   },
   "author": "Mark Percival <m@mdp.im>",
   "license": "MIT",

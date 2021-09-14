@@ -1,9 +1,10 @@
-import gameList from '../../lib/head_copy/game_list';
+import {turnGameList, streakGameList} from '../../lib/head_copy/game_list';
 import Link from 'next/link'
 
 export default function Index() {
 
-  function listGames() {
+  function listGames(type) {
+    const gameList = type === 'streak' ? streakGameList : turnGameList
     return gameList.map((game) =>
       <li className="items-center my-2 px-4" key={game.id}>
         <Link href={`/head-copy/play/?mode=${game.id}`}>
@@ -27,7 +28,11 @@ export default function Index() {
           <form className="w-full max-w-lg pb-10 mx-auto">
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3 mb-6 md:mb-0">
-                <ul>{listGames()}</ul>
+                <ul>{listGames('turn')}</ul>
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0 text-center">
+                <h3 className="text-2xl font-bold pt-2">Streak Mode</h3>
+                <ul>{listGames('streak')}</ul>
               </div>
             </div>
           </form>

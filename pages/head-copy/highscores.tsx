@@ -16,14 +16,13 @@ export default function Highscores() {
         let highscores = null
         if (mode) {
             highscores = getHighscores(mode).map((h, idx) => {
-                const ts = Math.floor(h.createdAt.getTime() / 1000)
-                const active = ts === scoreTime;
-                const t = h.createdAt
+                const active = h.ts === scoreTime;
+                const t = new Date(h.ts)
                 const dateStr = `${t.getFullYear()}.${t.getMonth()+1}.${t.getDate()}`
                 return (
-                    <Link key={ts} href={`#${ts}`}>
+                    <Link key={h.ts} href={`#${h.ts}`}>
                         <li className={`${active ? 'text-blue-600' : ''}`}>
-                            {h.score} - {h.percentCorrect}% @{h.wpm}wpm on {dateStr}
+                            {h.score} {h.percentCorrect ? "- " + h.percentCorrect + "%" : ""} @{h.wpm}wpm on {dateStr}
                         </li>
                     </Link>
                 )

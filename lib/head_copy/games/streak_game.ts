@@ -41,6 +41,7 @@ export abstract class StreakBasedGame extends Game {
         const result = score(answers, gameState);
         gameState.scoreResults.push(result)
         gameState.score = gameState.score + result.score
+        gameState.charactersDecoded = gameState.charactersDecoded + result.correctlyDecoded
 
         const wrongAnswers = gameState.scoreResults.filter((r) => !r.correctlyAnswered).length
         gameState.progress = getProgress(this.lives, wrongAnswers)
@@ -52,13 +53,10 @@ export abstract class StreakBasedGame extends Game {
     }
 
     getFinalScore(gameState: StreakBasedGameState): [Highscore, number] {
-        const correctAnswers = gameState.scoreResults.map((r) => r.correctlyAnswered).filter((r) => r).length;
-        const percentCorrect = Math.floor(100 * (correctAnswers / gameState.scoreResults.length))
         return [{
             mode: this.id,
             score: gameState.score,
             wpm: gameState.fwpm,
-            percentCorrect,
             ts: Date.now()
         }, gameState.charactersDecoded]
     }

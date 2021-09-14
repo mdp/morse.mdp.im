@@ -24,8 +24,8 @@ export default function Result({answers, spaced}: ResultProps) {
 
     const answerKey = renderAnswers();
 
-    return <>
+    return <div className="text-center text-3xl">
         <div>{answerKey.keys}</div>
         <div>{answerKey.selections}</div>
-    </>
+    </div>
 }

@@ -3,10 +3,11 @@ import Game from "./game";
 import { RandomCharsTurns, LETTERS, RandomCharsStreak } from "./games/random_chars";
 import { WordGameTurns } from "./games/word_game";
 
-const gameList: Game[] = [
+
+export const turnGameList: Game[] = [
     new CallSignGameTurns({
         id: "dxcc100_6",
-        name: "DXCC100",
+        name: "DXCC100 6 Char Calls",
         description: "Source for DXCC100",
         source: '/data/dxcc100_6char.json',
         spaced: false,
@@ -18,14 +19,6 @@ const gameList: Game[] = [
         description: "5 Letters as random",
         charSet: LETTERS,
         turns: 50,
-        length: 5,
-    }),
-    new RandomCharsStreak({
-        id: "random_five_streak",
-        name: "Random 5 Characters Streak",
-        description: "5 Letters as random",
-        charSet: LETTERS,
-        lives: 3,
         length: 5,
     }),
     new RandomCharsTurns({
@@ -45,7 +38,28 @@ const gameList: Game[] = [
         turns: 50,
         phraseWordCount: 2,
     }),
+
 ]
 
+export const streakGameList: Game[] = [
+    new RandomCharsStreak({
+        id: "random_five_streak",
+        name: "Random 5 Characters Streak",
+        description: "5 Letters as random",
+        charSet: LETTERS,
+        lives: 3,
+        length: 5,
+    }),
+    new RandomCharsStreak({
+        id: "random_six_streak",
+        name: "Random 6 Characters Streak",
+        description: "6 Letters as random",
+        charSet: LETTERS,
+        lives: 3,
+        length: 5,
+    }),
+]
 
-export default gameList;
+const allGames = [].concat(streakGameList, turnGameList);
+
+export default allGames

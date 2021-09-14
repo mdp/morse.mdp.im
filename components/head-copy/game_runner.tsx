@@ -24,6 +24,7 @@ export default function GameRunner({ mode }: { mode: string }) {
     runState: "stopped",
     gameState: game.getInitialState(morseSettings),
     lastScore: null,
+    charactersDecoded: 0,
     morseSettings,
     question: null,
   }
@@ -42,6 +43,7 @@ export default function GameRunner({ mode }: { mode: string }) {
       ...state,
       runState: "complete",
       lastScore: finalScore,
+      charactersDecoded,
     })
   }
 
@@ -122,8 +124,10 @@ export default function GameRunner({ mode }: { mode: string }) {
           return <div className="container w-full md:max-w-xl mx-auto pt-5 px-4">
             <h1> Game Complete </h1>
             <h3>Score: {finalScore.score}</h3>
-            <h3>Percent Correct: {finalScore.percentCorrect}</h3>
-            <h3>Correct Decodes: {finalScore.charactersDecoded}</h3>
+            { finalScore.percentCorrect ? (
+              <h3>Percent Correct: {finalScore.percentCorrect}</h3>
+            ) : null}
+            <h3>Correct Decodes: {state.charactersDecoded}</h3>
             <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${finalScore.ts}`}>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>

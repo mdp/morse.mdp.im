@@ -34,7 +34,8 @@ export abstract class TurnBasedGame extends Game {
         const result = score(answers, gameState);
         gameState.scoreResults.push(result)
         gameState.score = gameState.score + result.score
-        gameState.charactersDecoded = gameState.scoreResults.map((r) => r.correctlyDecoded).reduce((a, b) =>a+b);
+        gameState.charactersDecoded = gameState.charactersDecoded + result.correctlyDecoded
+
         gameState.turnIdx = gameState.turnIdx + 1
         gameState.progress = gameState.turnIdx + "/" + this.turns
         if (gameState.turnIdx === this.turns - 1) {
