@@ -38,7 +38,7 @@ export abstract class TurnBasedGame extends Game {
 
         gameState.turnIdx = gameState.turnIdx + 1
         gameState.progress = gameState.turnIdx + "/" + this.turns
-        if (gameState.turnIdx === this.turns - 1) {
+        if (gameState.turnIdx === this.turns) {
             gameState.isComplete = true
         }
         return gameState
