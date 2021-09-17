@@ -38,7 +38,12 @@ export interface DefaultGameArgs {
     description: string
 }
 
-export default abstract class Game {
+// "interface merging" to allow for a optional class property
+interface Game {
+    settingsAllowed?: string[]
+}
+
+abstract class Game {
     readonly id: string
     readonly name: string
     readonly description: string
@@ -69,3 +74,5 @@ export default abstract class Game {
     }
 
 }
+
+export default Game

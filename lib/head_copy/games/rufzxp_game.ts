@@ -5,6 +5,7 @@ import { TurnBasedGame, TurnBasedGameState } from "./turn_based_game";
 const SPEED_CHANGE = 0.03; // 3 percent speed increase or decrease (Ceiled to always ensure the minimum of 1 wpm)
 
 export abstract class RufzxpGame extends TurnBasedGame {
+    readonly settingsAllowed = ["wpm", "freq"] // Farnsworth makes no sense here since it's unclear how we'd increase both progressively
 
     onAnswer(answers: Answer[], gameState: TurnBasedGameState): TurnBasedGameState {
         const state = super.onAnswer(answers, gameState)

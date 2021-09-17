@@ -10,6 +10,8 @@ import gameList from '../../lib/head_copy/game_list'
 const morseSettingsState = createPersistedState('morseSettings');
 
 const MINIMUM_WPM = 5;
+const MINIMUM_FREQ = 400;
+const MAXIMUM_FREQ = 1200;
 
 export default function GameRunner({ mode }: { mode: string }) {
   const game: Game | null = gameList.find((a) => a.id === mode) || null
@@ -33,6 +35,24 @@ export default function GameRunner({ mode }: { mode: string }) {
 
   if (!game.isReady) {
     game.load(() => setState({...state, runState: 'loaded'}))
+  }
+
+  function getGameSetting(key: string, name: string) {
+    if (game.settingsAllowed && !game.settingsAllowed.includes(key)) {
+      return null;
+    }
+    return (
+      <div className="w-full px-3 mb-6 md:mb-0">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+          {name}
+        </label>
+        <input
+          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+          type='text' onBlur={validateMorseSettings}
+          onChange={e => updateMorseSettings(key, e.target.value)}
+          value={morseSettings[key]} ></input>
+      </div>
+    )
   }
 
   function gameComplete() {
@@ -91,7 +111,7 @@ export default function GameRunner({ mode }: { mode: string }) {
     newSettings[key] = newValue
 
     // Match WPM to FWPM when it's being adjusted
-    if (key = "wpm") {
+    if (key === "wpm") {
       newSettings.fwpm = newValue 
     }
 
@@ -99,7 +119,7 @@ export default function GameRunner({ mode }: { mode: string }) {
     setState({...state, morseSettings: newSettings})
   }
 
-  function validateSpeeds() {
+  function validateMorseSettings() {
     const newSettings = state.morseSettings
     if (morseSettings.wpm < MINIMUM_WPM) {
       newSettings.wpm = MINIMUM_WPM
@@ -110,6 +130,9 @@ export default function GameRunner({ mode }: { mode: string }) {
     if (morseSettings.wpm < morseSettings.fwpm) {
       newSettings.fwpm = morseSettings.wpm
     }
+
+    if (morseSettings.freq > MAXIMUM_FREQ) {morseSettings.freq = MAXIMUM_FREQ}
+    if (morseSettings.freq < MINIMUM_FREQ) {morseSettings.freq = MINIMUM_FREQ}
     setMorseSettings(newSettings)
     setState({...state, morseSettings: newSettings})
   }
@@ -158,25 +181,9 @@ export default function GameRunner({ mode }: { mode: string }) {
           <div className="px-10">
             <form className="w-full max-w-lg pb-10 mx-auto">
               <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full px-3 mb-6 md:mb-0">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-                    WPM
-                  </label>
-                  <input
-                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                    type='text' onBlur={validateSpeeds}
-                    onChange={e => updateMorseSettings('wpm', e.target.value)}
-                    value={morseSettings.wpm} ></input>
-                </div>
-                <div className="w-full px-3">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                    Farnsworth
-                  </label>
-                  <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                    type='text' onBlur={validateSpeeds}
-                    onChange={e => updateMorseSettings('fwpm', e.target.value)}
-                    value={morseSettings.fwpm} ></input>
-                </div>
+                {getGameSetting('wpm', 'WPM')}
+                {getGameSetting('fwpm', 'Farnsworth')}
+                {getGameSetting('freq', 'Frequency')}
               </div>
             </form>
 
