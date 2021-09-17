@@ -2,6 +2,7 @@ import { randomChar, shuffle_array as shuffleArray } from "../utils";
 import { DefaultGameArgs, GameState, Question } from "../game";
 import { TurnBasedGame } from "./turn_based_game";
 import { StreakBasedGame } from "./streak_game";
+import { RufzxpGame } from "./rufzxp_game";
 
 
 export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
@@ -68,17 +69,17 @@ function intToMask(i: number, len: number): number[] {
     return binArr
 }
 
-
-
 function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
     const result = []
     for (let j=0; j < maskArr.length; j++) {
         if (maskArr[j] === 1) {
-            const swap = evilSwaps[str[j]]
-            if (swap) {
+            // Ensure we only swap with characters in the charset
+            const swap = (evilSwaps[str[j]].split('') || []).filter((s) => charSet.includes(s))
+            if (swap.length > 0) {
                 result.push(randomChar(swap))
             } else {
-                result.push(randomChar(charSet))
+                // Avoid randoming picking the same character
+                result.push(randomChar(charSet.replace(str[j], '')))
             }
         } else {
             result.push(str[j])
@@ -180,6 +181,40 @@ export class RandomCharsStreak extends StreakBasedGame {
         super({id, name, description})
         this.type = 'random';
         this.lives = lives;
+        this.length = length;
+        this.charSet = charSet;
+        this.isReady = true;
+    }
+
+    load(): void {
+        return
+    }
+
+    loadData(data): void {
+        return
+    }
+
+    unloadData(): void {
+        return
+    }
+
+    getQuestion(gameState: GameState): [Question, GameState] {
+        return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
+    }
+
+}
+
+export class RandomCharsRufzxp extends RufzxpGame {
+    readonly type: string
+    readonly charSet: string
+    readonly turns: number
+    readonly length: number
+    isReady: boolean
+
+    constructor({id, name, description, turns, length, charSet}: RandomCharsArgs) {
+        super({id, name, description})
+        this.type = 'random';
+        this.turns = turns;
         this.length = length;
         this.charSet = charSet;
         this.isReady = true;

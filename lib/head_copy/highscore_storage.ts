@@ -13,7 +13,7 @@ const TOTAL_DECODED_KEY = "TotalCharactersDecoded"
 
 export function getHighscores(key: string): Highscore[] {
     const hsArr: Highscore[] = JSON.parse(window.localStorage.getItem(HIGHSCORE_KEY) || "[]");
-    return hsArr.filter((h) => h.mode === key).sort((a,b) => b.ts - a.ts)
+    return hsArr.filter((h) => h.mode === key).sort((a,b) => b.score - a.score)
 }
 
 export function addHighscore(hs: Highscore) {

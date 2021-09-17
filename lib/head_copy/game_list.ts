@@ -1,6 +1,6 @@
 import { CallSignGameTurns } from "./games/callsign_game";
 import Game from "./game";
-import { RandomCharsTurns, LETTERS, RandomCharsStreak } from "./games/random_chars";
+import { RandomCharsTurns, LETTERS, RandomCharsStreak, RandomCharsRufzxp } from "./games/random_chars";
 import { WordGameTurns } from "./games/word_game";
 
 
@@ -44,7 +44,7 @@ export const turnGameList: Game[] = [
 export const streakGameList: Game[] = [
     new RandomCharsStreak({
         id: "random_five_streak",
-        name: "Random 5 Characters Streak",
+        name: "Random 5 Characters",
         description: "5 Letters as random",
         charSet: LETTERS,
         lives: 3,
@@ -52,7 +52,7 @@ export const streakGameList: Game[] = [
     }),
     new RandomCharsStreak({
         id: "random_six_streak",
-        name: "Random 6 Characters Streak",
+        name: "Random 6 Characters",
         description: "6 Letters as random",
         charSet: LETTERS,
         lives: 3,
@@ -60,6 +60,25 @@ export const streakGameList: Game[] = [
     }),
 ]
 
-const allGames = [].concat(streakGameList, turnGameList);
+export const rufzxpGameList: Game[] = [
+    new RandomCharsRufzxp({
+        id: "random_five_rufzxp",
+        name: "Random 5 Characters",
+        description: "5 Letters as random",
+        charSet: LETTERS,
+        turns: 50,
+        length: 5,
+    }),
+    new RandomCharsRufzxp({
+        id: "random_six_rufzxp",
+        name: "Random 6 Characters",
+        description: "6 Letters as random",
+        charSet: LETTERS,
+        turns: 50,
+        length: 5,
+    }),
+]
+
+const allGames = [].concat(streakGameList, turnGameList, rufzxpGameList);
 
 export default allGames

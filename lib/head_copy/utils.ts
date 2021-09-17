@@ -18,7 +18,7 @@ export function unique(arr: any[]): any[] {
     return arr.filter((value, index, self) => self.indexOf(value) === index)
 }
   
-export function randomChar(list: string): string {
+export function randomChar(list: string | string[]): string {
     return list[Math.floor(Math.random() * list.length)];
 }
   

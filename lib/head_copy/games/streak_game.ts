@@ -14,10 +14,9 @@ export interface StreakBasedGameArgs extends DefaultGameArgs {
     spaced: boolean
 }
 
-function getProgress(lives, wrongAnswers=0): string {
+function getProgress(_lives, wrongAnswers=0): string {
     let progress = "";
-    const livesLeft = lives - wrongAnswers;
-    for (let i = 0; i < livesLeft; i++) { progress = progress + PROGRESS_CHAR }
+    for (let i = 0; i < wrongAnswers; i++) { progress = progress + PROGRESS_CHAR }
     return progress
 }
 
