@@ -8,10 +8,13 @@ export default function Index() {
     switch(type) {
       case 'regular':
         gameList = turnGameList;
+        break;
       case 'streak':
         gameList = streakGameList;
+        break;
       case 'rufzxp':
         gameList = rufzxpGameList;
+        break;
     }
 
     return gameList.map((game) =>
@@ -47,7 +50,7 @@ export default function Index() {
                 <ul>{listGames('streak')}</ul>
               </div>
               <div className="w-full px-3 mb-6 md:mb-0 text-center">
-                <h3 className="text-2xl font-bold pt-2">RufZXP Mode</h3>
+                <h3 className="text-2xl font-bold pt-2">RufzXP Mode</h3>
                 <p className="text-base pt-1">50 turns, answer correctly and you're rewarded with a faster speed.</p>
                 <ul>{listGames('rufzxp')}</ul>
               </div>
