@@ -2,24 +2,23 @@ import { Answer } from "../game";
 import { Highscore } from "../highscore_storage";
 import { TurnBasedGame, TurnBasedGameState } from "./turn_based_game";
 
-const SPEED_CHANGE = 0.03; // 3 percent speed increase or decrease (Ceiled to always ensure the minimum of 1 wpm)
+const SPEED_RANGE = 1.6; // 25wpm should top out at 40wpm 1.6x on a perfect game
 
 export abstract class RufzxpGame extends TurnBasedGame {
     readonly settingsAllowed = ["wpm", "freq"] // Farnsworth makes no sense here since it's unclear how we'd increase both progressively
 
     onAnswer(answers: Answer[], gameState: TurnBasedGameState): TurnBasedGameState {
-        const state = super.onAnswer(answers, gameState)
+        const state = super.onAnswer(answers, gameState);
 
-        const correctlyAnswered = state.scoreResults[state.scoreResults.length - 1].correctlyAnswered
-        const speedChange = Math.ceil(state.wpm * SPEED_CHANGE);
+        const correctScoreTally = state.scoreResults.reduce((prev, current) => {return current.correctlyAnswered ? prev + 1 : prev - 1}, 0)
 
-        if (correctlyAnswered) {
-            state.wpm = state.wpm + speedChange;
-            state.fwpm = state.wpm;
-        } else {
-            state.wpm = state.wpm - speedChange;
-            state.fwpm = state.wpm;
-        }
+        const startingSpeed = state.scoreResults[0].wpm;
+        const speedRange = state.scoreResults[0].wpm * SPEED_RANGE - startingSpeed;
+        const step = speedRange / this.turns;
+        const speedChange = Math.floor(step * correctScoreTally)
+
+        state.wpm = startingSpeed + speedChange;
+        state.fwpm = state.wpm;
 
         return state
     }
@@ -37,35 +36,4 @@ export abstract class RufzxpGame extends TurnBasedGame {
         }, gameState.charactersDecoded]
     }
 
-}
-
-export abstract class RufzxpGameFetch extends RufzxpGame{
-    abstract source: string
-
-    abstract loadData(data: any): void;
-
-    abstract unloadData(): void;
-
-    load(done: (err?: any) => void) : void {
-        if (this.state !== 'empty') { return }
-        this.state = 'loading'
-        fetch(this.source).then(res => {
-            if(res.status >= 400) {
-                this.error = `Error loading data(${this.source}): ${res.status} - ${res.statusText}`
-                done(this.error)
-            } else {
-                res.json().then(data => {
-                    this.loadData(data)
-                    this.state = 'loaded'
-                    done()
-                })
-            }
-        }).catch((e) => {
-            console.log(e)
-            this.error = e
-            this.error = `Error loading data(${this.source}): ${e}`
-            done(this.error)
-        })
-    }
-    
 }

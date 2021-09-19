@@ -146,18 +146,6 @@ export class RandomCharsTurns extends TurnBasedGame {
         this.isReady = true;
     }
 
-    load(): void {
-        return
-    }
-
-    loadData(data): void {
-        return
-    }
-
-    unloadData(): void {
-        return
-    }
-
     getQuestion(gameState: GameState): [Question, GameState] {
         return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
     }
@@ -186,18 +174,6 @@ export class RandomCharsStreak extends StreakBasedGame {
         this.isReady = true;
     }
 
-    load(): void {
-        return
-    }
-
-    loadData(data): void {
-        return
-    }
-
-    unloadData(): void {
-        return
-    }
-
     getQuestion(gameState: GameState): [Question, GameState] {
         return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
     }
@@ -218,18 +194,6 @@ export class RandomCharsRufzxp extends RufzxpGame {
         this.length = length;
         this.charSet = charSet;
         this.isReady = true;
-    }
-
-    load(): void {
-        return
-    }
-
-    loadData(data): void {
-        return
-    }
-
-    unloadData(): void {
-        return
     }
 
     getQuestion(gameState: GameState): [Question, GameState] {

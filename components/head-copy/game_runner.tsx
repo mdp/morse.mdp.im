@@ -34,7 +34,7 @@ export default function GameRunner({ mode }: { mode: string }) {
   const [state, setState] = useState(defaultState)
 
   if (!game.isReady) {
-    game.load(() => setState({...state, runState: 'loaded'}))
+    game.load().then(() => setState({...state, runState: 'loaded'}))
   }
 
   function getGameSetting(key: string, name: string) {
@@ -201,7 +201,6 @@ export default function GameRunner({ mode }: { mode: string }) {
 
   }
   
-  console.log("QuestionPool", game)
   if (game.error) {
     return <div>Error {game.error}</div>
   }

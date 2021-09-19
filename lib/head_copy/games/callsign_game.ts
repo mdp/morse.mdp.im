@@ -1,6 +1,8 @@
 import { GameState, Question } from "../game";
 import { randomPick, similar } from "../utils";
-import { TurnBasedGameArgs, TurnBasedGameFetch, TurnBasedGameState } from "./turn_based_game";
+import { RufzxpGame } from "./rufzxp_game";
+import { StreakBasedGame, StreakBasedGameArgs } from "./streak_game";
+import { TurnBasedGame, TurnBasedGameArgs, TurnBasedGameState } from "./turn_based_game";
 
 // Represents all the possible phrases and and answer corpus for each column
 export interface CallList {
@@ -61,8 +63,7 @@ function buildQuestionFromCallList(callList: CallList,
     return q;
 }
 
-export class CallSignGameTurns extends TurnBasedGameFetch {
-    readonly source: string
+export class CallSignGameTurns extends TurnBasedGame {
     readonly type: string
     readonly turns: number
     readonly spaced: boolean
@@ -70,16 +71,74 @@ export class CallSignGameTurns extends TurnBasedGameFetch {
     isReady: boolean
     callList: CallList
 
-    constructor({id, name, description, source, turns, spaced}: TurnBasedGameArgs) {
-        super({id, name, description})
-        this.source = source
+    constructor({id, name, description, data, turns, spaced}: TurnBasedGameArgs) {
+        super({id, name, description, data})
         this.type = 'calls';
         this.turns = turns;
         this.spaced = spaced;
     }
 
-    loadData(data): void {
-        console.log(data)
+    onData(data): void {
+        this.callList = buildCallsignQuestionPool(data['content'])
+        this.isReady = true;
+    }
+
+    unloadData(): void {
+        this.callList = null;
+    }
+
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
+        return [buildQuestionFromCallList(this.callList, {answerCount: 5, spaced: false}, gameState), gameState]
+    }
+
+}
+
+export class CallSignGameStreak extends StreakBasedGame {
+    readonly type: string
+    readonly lives: number
+    readonly spaced: boolean
+
+    isReady: boolean
+    callList: CallList
+
+    constructor({id, name, description, data, lives, spaced}: StreakBasedGameArgs) {
+        super({id, name, description, data})
+        this.type = 'calls';
+        this.lives = lives;
+        this.spaced = spaced;
+    }
+
+    onData(data): void {
+        this.callList = buildCallsignQuestionPool(data['content'])
+        this.isReady = true;
+    }
+
+    unloadData(): void {
+        this.callList = null;
+    }
+
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
+        return [buildQuestionFromCallList(this.callList, {answerCount: 5, spaced: false}, gameState), gameState]
+    }
+
+}
+
+export class CallSignGameRufzxp extends RufzxpGame {
+    readonly type: string
+    readonly turns: number
+    readonly spaced: boolean
+
+    isReady: boolean
+    callList: CallList
+
+    constructor({id, name, description, data, turns, spaced}: TurnBasedGameArgs) {
+        super({id, name, description, data})
+        this.type = 'calls';
+        this.turns = turns;
+        this.spaced = spaced;
+    }
+
+    onData(data): void {
         this.callList = buildCallsignQuestionPool(data['content'])
         this.isReady = true;
     }

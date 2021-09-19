@@ -36,6 +36,7 @@ export interface DefaultGameArgs {
     id: string
     name: string
     description: string
+    data?: AsyncData
 }
 
 // "interface merging" to allow for a optional class property
@@ -51,28 +52,85 @@ abstract class Game {
     abstract isReady: boolean     // when getQuestion is available
     state: string
     error: string
+    source: string | null
+    data: AsyncData | null
 
     abstract getInitialState(GameSettings): GameState;
     abstract getQuestion(gamState: GameState): [question: Question, state: GameState];
     abstract onAnswer(answers: Answer[], gameState: GameState): GameState;
     abstract getFinalScore(gameState: GameState): [hs: Highscore, charactersDecoded: number];
 
-    constructor({id, name, description}) {
+    constructor({id, name, description, data}: DefaultGameArgs) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.data = null
+        if (data) {
+            this.data = data;
+        }
         this.state = "empty"
         this.error = null
     }
 
-    load(done: (err?: any) => void): void {
+    async load() : Promise<void> {
+        if (this.data === null) {
+            this.isReady = true;
+        }
+        if (this.state !== 'empty') { return }
+        this.state = 'loading'
+        try {
+            const data = await this.data.load()
+            this.onData(data)
+
+        } catch (e) {
+            this.error = `Error loading data(${this.source}): ${e}`
+        }
     }
 
     unload(): void {
+        this.unloadData();
         this.isReady = false;
         this.state = 'empty';
     }
 
+
+    onData(data): void {
+        console.error("This method should be overridden by the game subclass")
+    }
+
+    unloadData(): void {
+    }
+
+}
+
+export interface AsyncData {
+    load(): Promise<any>
+}
+
+export class FetchData {
+    readonly source: string
+    
+    constructor(source: string) {
+        this.source = source
+    }
+
+    load() : Promise<any> {
+        return new Promise((resolve, reject) => {
+            fetch(this.source).then(res => {
+                if (res.status >= 400) {
+                    const error = `Error loading data(${this.source}): ${res.status} - ${res.statusText}`
+                    return reject(error)
+                }
+                res.json().then(data => {
+                    resolve(data)
+                })
+            }).catch((e) => {
+                console.log(e)
+                const error = `Error loading data(${this.source}): ${e}`
+                reject(error)
+            })
+        })
+    }
 }
 
 export default Game

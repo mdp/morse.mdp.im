@@ -1,4 +1,4 @@
-import Game, { Answer, DefaultGameArgs, GameSettings, GameState } from "../game";
+import Game, { Answer, AsyncData, DefaultGameArgs, GameSettings, GameState } from "../game";
 import score, { ScoreResult } from "../scoring";
 import { Highscore } from "../highscore_storage";
 
@@ -8,7 +8,7 @@ export interface TurnBasedGameState extends GameState {
 }
 
 export interface TurnBasedGameArgs extends DefaultGameArgs {
-    source: string
+    data: AsyncData
     turns: number
     spaced: boolean
 }
@@ -36,10 +36,16 @@ export abstract class TurnBasedGame extends Game {
         gameState.score = gameState.score + result.score
         gameState.charactersDecoded = gameState.charactersDecoded + result.correctlyDecoded
 
-        gameState.turnIdx = gameState.turnIdx + 1
-        gameState.progress = gameState.turnIdx + "/" + this.turns
         if (gameState.turnIdx === this.turns) {
             gameState.isComplete = true
+        }
+
+        gameState.turnIdx = gameState.turnIdx + 1
+        if (gameState.isComplete) {
+            // Don't display 51/50 on Game Over Page
+            gameState.progress = this.turns + "/" + this.turns
+        } else {
+            gameState.progress = gameState.turnIdx + "/" + this.turns
         }
         return gameState
     }
@@ -56,35 +62,4 @@ export abstract class TurnBasedGame extends Game {
         }, gameState.charactersDecoded]
     }
 
-}
-
-export abstract class TurnBasedGameFetch extends TurnBasedGame{
-    abstract source: string
-
-    abstract loadData(data: any): void;
-
-    abstract unloadData(): void;
-
-    load(done: (err?: any) => void) : void {
-        if (this.state !== 'empty') { return }
-        this.state = 'loading'
-        fetch(this.source).then(res => {
-            if(res.status >= 400) {
-                this.error = `Error loading data(${this.source}): ${res.status} - ${res.statusText}`
-                done(this.error)
-            } else {
-                res.json().then(data => {
-                    this.loadData(data)
-                    this.state = 'loaded'
-                    done()
-                })
-            }
-        }).catch((e) => {
-            console.log(e)
-            this.error = e
-            this.error = `Error loading data(${this.source}): ${e}`
-            done(this.error)
-        })
-    }
-    
 }

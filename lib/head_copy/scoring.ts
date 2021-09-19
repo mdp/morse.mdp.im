@@ -14,9 +14,13 @@ export interface ScoreResult {
 export default function score(answers: Answer[], gameState: GameState): ScoreResult {
     let correctlyDecoded = 0;
     let score = 0;
+
     // Extend time depending on how many answer sets we provide
     const slowResponseTime = (answers.length) * SLOW_RESPONSE; // Needed for the slow time penalty
-    const duration = answers.map((a)=> a.elapsed).reduce((a, b) => a + b);
+
+    // Get the last questions elapsed time, this is the total time it took to answer the question
+    const duration = answers[answers.length - 1].elapsed;
+
     const correctlyAnswered = answers.map((a) => a.selected).join("") === answers.map((a) => a.actual).join("")
     answers.forEach((set, idx) => {
       if (set.actual === set.selected) {

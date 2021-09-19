@@ -42,11 +42,7 @@ export function Turn({question, onComplete, onNext, gameOver}: TurnProps) {
   function onAnswer(correctWord, wordSelected) {
     let wordIdx = state.wordIdx + 1;
     console.log(`${correctWord} : ${wordSelected}`);
-    let startedAt = state.startedAt
-    if (state.answers.length > 0) {
-      startedAt = state.startedAt + state.answers.map((a) => a.elapsed).reduce((a,b) => a + b)
-    }
-    const answer: Answer = {actual: correctWord, selected: wordSelected, elapsed: Date.now() - startedAt}
+    const answer: Answer = {actual: correctWord, selected: wordSelected, elapsed: Date.now() - state.startedAt}
     const answers = [...state.answers, answer]
     setState({
       ...state,

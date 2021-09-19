@@ -1,6 +1,6 @@
 import { GameState, Question } from "../game"
 import { randomPick, similar } from "../utils"
-import { TurnBasedGameArgs, TurnBasedGameFetch, TurnBasedGameState } from "./turn_based_game"
+import { TurnBasedGame, TurnBasedGameArgs, TurnBasedGameState } from "./turn_based_game"
 
 export interface PhraseList {
     phrases: string[][],
@@ -43,8 +43,7 @@ export const questionFromPhraseList = function(phraseList: PhraseList,
       return q;
   }
 
-export class PhraseGameTurns extends TurnBasedGameFetch {
-    readonly source: string
+export class PhraseGameTurns extends TurnBasedGame {
     readonly type: string
     readonly turns: number
     readonly spaced: boolean
@@ -52,15 +51,14 @@ export class PhraseGameTurns extends TurnBasedGameFetch {
     isReady: boolean
     phraseList: PhraseList
 
-    constructor({id, name, description, source, turns, spaced}: TurnBasedGameArgs) {
-        super({id, name, description})
-        this.source = source
+    constructor({id, name, description, data, turns, spaced}: TurnBasedGameArgs) {
+        super({id, name, description, data})
         this.type = 'phrases';
         this.turns = turns;
         this.spaced = spaced;
     }
 
-    loadData(data): void {
+    onData(data): void {
         this.phraseList = phrasesToPhraseList(data['content'])
         this.isReady = true;
     }
