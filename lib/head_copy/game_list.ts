@@ -40,8 +40,8 @@ export const turnGameList: Game[] = [
     new WordGameTurns({
         id: "2-words",
         name: "2 Random Words",
-        description: "Two unreleated 2 to 7 character words",
-        data: new FetchData('/data/2_7_letter_words.json'),
+        description: "Two unreleated words",
+        data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         turns: 50,
         phraseWordCount: 2,
@@ -94,8 +94,8 @@ export const streakGameList: Game[] = [
     new WordGameStreak({
         id: "2-words-streak",
         name: "2 Random Words",
-        description: "Two unreleated 2 to 7 character words",
-        data: new FetchData('/data/2_7_letter_words.json'),
+        description: "Two unreleated words",
+        data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         lives: 3,
         phraseWordCount: 2,
@@ -148,8 +148,8 @@ export const rufzxpGameList: Game[] = [
     new WordGameRufzxp({
         id: "2-words-rufzxp",
         name: "2 Random Words",
-        description: "Two unreleated 2 to 7 character words",
-        data: new FetchData('/data/2_7_letter_words.json'),
+        description: "Two unreleated words",
+        data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         turns: 50,
         phraseWordCount: 2,

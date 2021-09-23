@@ -173,10 +173,16 @@ export default function GameRunner({ mode }: { mode: string }) {
       <div className="container w-full md:max-w-xl mx-auto pt-5">
         <div
           className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" >
-          <header className="font-sans text-center pb-20">
+          <header className="font-sans text-center pb-10">
             <h1
               className="font-bold font-sans break-normal text-gray-900 text-3xl"
             > 🧠 Head Copy ✍️ </h1>
+            <h2
+              className="font-sans break-normal text-gray-800 text-2xl pt-5"
+            > {game.name} </h2>
+            <h3
+              className="font-sans break-normal text-gray-800 pt-2"
+            > {game.description} </h3>
           </header>
           <div className="px-10">
             <form className="w-full max-w-lg pb-10 mx-auto">
