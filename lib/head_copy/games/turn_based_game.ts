@@ -43,7 +43,7 @@ export abstract class TurnBasedGame extends Game {
         gameState.turnIdx = gameState.turnIdx + 1
         if (gameState.isComplete) {
             // Don't display 51/50 on Game Over Page
-            gameState.progress = "Game Over"
+            gameState.progress = (gameState.turnIdx) + "/" + this.turns 
         } else {
             gameState.progress = (gameState.turnIdx + 1) + "/" + this.turns
         }
