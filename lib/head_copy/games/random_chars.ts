@@ -1,52 +1,13 @@
 import { randomChar, shuffle_array as shuffleArray } from "../utils";
 import { DefaultGameArgs, GameState, Question } from "../game";
-import { TurnBasedGame } from "./turn_based_game";
+import { TurnBasedGame, TurnBasedGameState } from "./turn_based_game";
 import { StreakBasedGame } from "./streak_game";
 import { RufzxpGame } from "./rufzxp_game";
-
+import { swaps as morseSwaps } from '../../morse'
 
 export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
 export const LETTERS_AND_NUMBERS = "abcdefghijklmnopqrstuvwxyz0123456789";
 export const NUMBERS = "0123456789";
-
-const evilSwaps = {
-    "a": "n",
-    "b": "dvu",
-    "c": "kqy",
-    "d": "bu",
-    "e": "it",
-    "f": "l",
-    "g": "z",
-    "h": "si",
-    "i": "s",
-    "j": "po",
-    "k": "cr",
-    "l": "f",
-    "m": "no",
-    "n": "m",
-    "o": "mj",
-    "p": "rj",
-    "q": "cy",
-    "r": "kw",
-    "s": "ih",
-    "t": "em",
-    "u": "vd",
-    "v": "bu",
-    "w": "rj",
-    "x": "b",
-    "y": "qc",
-    "z": "g",
-    "0": "91",
-    "1": "9",
-    "2": "3",
-    "3": "2",
-    "4": "59",
-    "5": "4",
-    "6": "1",
-    "7": "3",
-    "8": "7",
-    "9": "40",
-}
 
 function getSwapMasks(power: number): number[] {
     const maskCount = Math.pow(2, power)
@@ -74,7 +35,7 @@ function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
     for (let j=0; j < maskArr.length; j++) {
         if (maskArr[j] === 1) {
             // Ensure we only swap with characters in the charset
-            const swap = (evilSwaps[str[j]].split('') || []).filter((s) => charSet.includes(s))
+            const swap = (morseSwaps[str[j]] || []).filter((s) => charSet.includes(s))
             if (swap.length > 0) {
                 result.push(randomChar(swap))
             } else {
@@ -146,7 +107,7 @@ export class RandomCharsTurns extends TurnBasedGame {
         this.isReady = true;
     }
 
-    getQuestion(gameState: GameState): [Question, GameState] {
+    getQuestion(gameState: TurnBasedGameState): [Question, TurnBasedGameState] {
         return [buildQuestionRandomGroup({spaced: false, length: this.length, charSet: this.charSet}, gameState), gameState]
     }
 

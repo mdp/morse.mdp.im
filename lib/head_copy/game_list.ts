@@ -24,7 +24,7 @@ export const turnGameList: Game[] = [
     new RandomCharsTurns({
         id: "random_five",
         name: "Random 5 Characters",
-        description: "5 Letters as random",
+        description: "5 Letters at random",
         charSet: LETTERS,
         turns: 50,
         length: 5,
@@ -32,7 +32,7 @@ export const turnGameList: Game[] = [
     new RandomCharsTurns({
         id: "random_six",
         name: "Random 6 Characters",
-        description: "6 Letters as random",
+        description: "6 Letters at random",
         charSet: LETTERS,
         turns: 50,
         length: 6,
@@ -78,7 +78,7 @@ export const streakGameList: Game[] = [
     new RandomCharsStreak({
         id: "random_five_streak",
         name: "Random 5 Characters",
-        description: "5 Letters as random",
+        description: "5 Letters at random",
         charSet: LETTERS,
         lives: 3,
         length: 5,
@@ -86,7 +86,7 @@ export const streakGameList: Game[] = [
     new RandomCharsStreak({
         id: "random_six_streak",
         name: "Random 6 Characters",
-        description: "6 Letters as random",
+        description: "6 Letters at random",
         charSet: LETTERS,
         lives: 3,
         length: 5,
@@ -132,7 +132,7 @@ export const rufzxpGameList: Game[] = [
     new RandomCharsRufzxp({
         id: "random_five_rufzxp",
         name: "Random 5 Characters",
-        description: "5 Letters as random",
+        description: "5 Letters at random",
         charSet: LETTERS,
         turns: 50,
         length: 5,
@@ -140,7 +140,7 @@ export const rufzxpGameList: Game[] = [
     new RandomCharsRufzxp({
         id: "random_six_rufzxp",
         name: "Random 6 Characters",
-        description: "6 Letters as random",
+        description: "6 Letters at random",
         charSet: LETTERS,
         turns: 50,
         length: 5,
