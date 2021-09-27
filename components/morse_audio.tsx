@@ -9,6 +9,7 @@ interface MorseAudioProps {
     fwpm: number,
     freq?: number,
     preDelay?: number,
+    postDelay?: number,
     onComplete: () => void,
 }
 
@@ -44,7 +45,8 @@ export default function MorseAudio(props: MorseAudioProps) {
         // On mobile(ios with bluetooth) we need to lead with some space.
         // On bluetooth it seems to launch the sound and quickly fade in the
         // audio which clips the first dit sometimes
-        timings.unshift(props.preDelay || -250) // 250ms seems like a reasonable amount
+        timings.unshift(props.preDelay || -300) // 300ms seems reasonable
+        timings.push(props.postDelay || -250) // 200ms to try and stop end clipping on Firefox for Windows
         const sample = MorseCWWave.getSampleGeneral(timings, props.freq || 700, morseCWWave.sampleRate, 10);
         const datauri = getDataURI(RiffWave.getData(sample), RiffWave.getMIMEType()); // create an HTML5 audio element
         if (audioRef.current) {
