@@ -6,7 +6,7 @@ Lately I've been updating it to include a [mobile optimized Morse trainer focuse
 
 ### Credits
 
-Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for his excellent [Morse Pro library](https://github.com/scp93ch/morse-pro) which I use to create the mp3 files for the headlines. Credit also goes to Kurt Zoglmann who open sourced Morse Code Ninja where I was able to get great word/callsign/training lists from. 
+Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for his excellent [Morse Pro library](https://github.com/scp93ch/morse-pro) which I use to create the mp3 files for the headlines. Credit also goes to Kurt Zoglmann who [open sourced](https://morsecode.ninja/) [Morse Code Ninja](https://morsecode.ninja/) where I was able to get great word/callsign/training lists from. 
 
 ## Headcopy Mobile Game
 
