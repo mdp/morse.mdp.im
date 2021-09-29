@@ -46,7 +46,9 @@ export default function MorseAudio(props: MorseAudioProps) {
         // On bluetooth it seems to launch the sound and quickly fade in the
         // audio which clips the first dit sometimes
         timings.unshift(props.preDelay || -300) // 300ms seems reasonable
-        timings.push(props.postDelay || -250) // 200ms to try and stop end clipping on Firefox for Windows
+        timings.push(props.postDelay || -100) // 100ms to try and stop end clipping on Firefox for Windows
+        timings.push(0) // Cleanly ends the audio in iOS and mac
+
         const sample = MorseCWWave.getSampleGeneral(timings, props.freq || 700, morseCWWave.sampleRate, 10);
         const datauri = getDataURI(RiffWave.getData(sample), RiffWave.getMIMEType()); // create an HTML5 audio element
         if (audioRef.current) {
