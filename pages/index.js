@@ -18,13 +18,13 @@ export default function Index() {
         <div className="px-10">
         <ul>
           <li className="items-center my-2 px-4">
-            <Link href={`/head-copy/`}>
+            <Link href={`/head-copy/`} passHref>
               <button className="w-full justify-center rounded-md border border-gray-300 p-4"
               >Head Copy Games</button>
             </Link>
           </li>
           <li className="items-center my-2 px-4">
-            <Link href={`/news/`}>
+            <Link href={`/news/`} passHref>
               <button className="w-full justify-center rounded-md border border-gray-300 p-4"
               >Morse Code Headlines</button>
             </Link>

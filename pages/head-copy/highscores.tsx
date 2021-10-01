@@ -22,7 +22,7 @@ export default function Highscores() {
             highscores = getHighscores(mode).map((h, idx) => {
                 const active = h.ts === scoreTime;
                 return (
-                    <Link key={h.ts} href={`#${h.ts}`}>
+                    <Link key={h.ts} href={`#${h.ts}`} passHref>
                         <li className={`${active ? 'text-blue-600' : ''}`}>
                             {game.parseHighscore(h)}
                         </li>
@@ -34,21 +34,21 @@ export default function Highscores() {
         return <> </>
     }
 
-    useEffect(() => setWindowLoaded(true))
+    useEffect(() => setWindowLoaded(true), [])
 
     // Need to handle SSR issues with this page (window not available)
     if (!windowLoaded) {
         return <div> Loading... </div>
     }
 
-    return <div className="container w-full md:max-w-4xl mx-auto pt-5 pb-5 eightbit-font">
+    return <div className="container w-full md:max-w-4xl mx-auto pt-5 eightbit-font">
         <div className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" >
         <h1>Highscores</h1>
         <h3 className="text-sm">Characters Decoded: {getTotalCharacterDecoded()}</h3>
         <div className="text-xs">
             {getHighscoreList()}
         </div>
-        <Link href={`/head-copy`}>
+        <Link href={`/head-copy`} passHref>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Done</button>
         </Link>
         </div>

@@ -29,7 +29,7 @@ export default function Index() {
   function listGames(gameList: any[]) {
     return gameList.map((game) =>
       <li className="items-center my-2 px-4" key={game.id}>
-        <Link href={`/head-copy/play/?mode=${game.id}`}>
+        <Link href={`/head-copy/play/?mode=${game.id}`} passHref>
           <button className="w-full justify-center rounded-md border border-gray-300 p-4"
           >{game.name}</button>
         </Link>
@@ -61,7 +61,7 @@ export default function Index() {
               { subModes.map((mode)=>{
                 return (
                   <li className="items-center my-2 px-4" key={mode.id}>
-                    <Link href={`?submode=${mode.id}`}>
+                    <Link href={`?submode=${mode.id}`} passHref>
                       <button className="w-full justify-center rounded-md border border-gray-300 p-4"
                       >{mode.name}</button>
                     </Link>

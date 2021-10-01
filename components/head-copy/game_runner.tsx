@@ -151,7 +151,7 @@ export default function GameRunner({ mode }: { mode: string }) {
               <h3>Percent Correct: {finalScore.percentCorrect}</h3>
             ) : null}
             <h3>Correct Decodes: {state.charactersDecoded}</h3>
-            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${finalScore.ts}`}>
+            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${finalScore.ts}`} passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Play Again</button>
@@ -194,10 +194,10 @@ export default function GameRunner({ mode }: { mode: string }) {
             </form>
 
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Click to Play</button>
-            <Link href={`/head-copy/highscores/?mode=${mode}`}>
+            <Link href={`/head-copy/highscores/?mode=${mode}`} passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
-            <Link href="/head-copy">
+            <Link href="/head-copy" passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3">Back to Menu</button>
             </Link>
           </div>

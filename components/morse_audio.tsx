@@ -62,7 +62,7 @@ export default function MorseAudio(props: MorseAudioProps) {
         if (state === "new") {
             setState("initializing") // Will re-render the component but with audioRef set
         }
-    })
+    }, [state])
 
     // TODO: Place an optional button here to pause/stop playback on pages that
     // need control (eg. headlines)
