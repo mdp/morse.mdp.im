@@ -40,7 +40,7 @@ export const turnGameList: Game[] = [
     new WordGameTurns({
         id: "2-words",
         name: "2 Random Words",
-        description: "Two unreleated words",
+        description: "Two unrelated words",
         data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         turns: 50,
@@ -49,7 +49,7 @@ export const turnGameList: Game[] = [
     new WordGameTurns({
         id: "2-qso-words",
         name: "2 Random QSO Words",
-        description: "Two unreleated common QSO words",
+        description: "Two unrelated common QSO words",
         data: new FetchData('/data/top_qso_words.json'),
         spaced: false,
         turns: 50,
@@ -94,7 +94,7 @@ export const streakGameList: Game[] = [
     new WordGameStreak({
         id: "2-words-streak",
         name: "2 Random Words",
-        description: "Two unreleated words",
+        description: "Two unrelated words",
         data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         lives: 3,
@@ -103,7 +103,7 @@ export const streakGameList: Game[] = [
     new WordGameStreak({
         id: "2-qso-words-streak",
         name: "2 Random QSO Words",
-        description: "Two unreleated common QSO words",
+        description: "Two unrelated common QSO words",
         data: new FetchData('/data/top_qso_words.json'),
         spaced: false,
         lives: 3,
@@ -148,7 +148,7 @@ export const rufzxpGameList: Game[] = [
     new WordGameRufzxp({
         id: "2-words-rufzxp",
         name: "2 Random Words",
-        description: "Two unreleated words",
+        description: "Two unrelated words",
         data: new FetchData('/data/top_2265_words.json'),
         spaced: false,
         turns: 50,
@@ -157,7 +157,7 @@ export const rufzxpGameList: Game[] = [
     new WordGameRufzxp({
         id: "2-qso-words-rufzxp",
         name: "2 Random QSO Words",
-        description: "Two unreleated common QSO words",
+        description: "Two unrelated common QSO words",
         data: new FetchData('/data/top_qso_words.json'),
         spaced: false,
         turns: 50,
