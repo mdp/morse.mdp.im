@@ -6,8 +6,8 @@ import { RufzxpGame } from "./rufzxp_game";
 import { swaps as morseSwaps } from '../../morse'
 
 export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
-export const LETTERS_AND_NUMBERS = "abcdefghijklmnopqrstuvwxyz0123456789";
 export const NUMBERS = "0123456789";
+export const COMMON_SYMBOLS = "/.,?";
 
 function getSwapMasks(power: number): number[] {
     const maskCount = Math.pow(2, power)
@@ -22,6 +22,7 @@ function getSwapMasks(power: number): number[] {
 }
 
 // Get a mask from the int padded to the desired length
+// e.g. (3, 4) => [0,0,1,1]
 function intToMask(i: number, len: number): number[] {
     const binArr = i.toString(2).split("").map((m) => parseInt(m,10))
     for (let j = binArr.length; j < len; j++) {

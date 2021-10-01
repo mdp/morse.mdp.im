@@ -170,7 +170,7 @@ export default function GameRunner({ mode }: { mode: string }) {
 
   function renderIndexPage() {
     return(
-      <div className="container w-full md:max-w-xl mx-auto pt-5">
+      <div className="container w-full md:max-w-xl mx-auto pt-5 pb-5">
         <div
           className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" >
           <header className="font-sans text-center pb-10">

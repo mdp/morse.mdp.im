@@ -1,7 +1,8 @@
 import React from "react"
 import Head from 'next/head'
 import './styles.css'
-import { TRACKING_ID } from '../config'
+import config from '../config'
+import { useRouter } from "next/dist/client/router"
 
 function ensureHTTPS(window) {
   if (window
@@ -16,21 +17,24 @@ function ensureHTTPS(window) {
 // Only tracks pageviews for usage stats, no user or session tracking
 function anonymousGoogleTracking(window) {
   if (window) {
-    window.dataLayer = window.dataLayer || [];
-    dataLayer.push(['js', new Date()]);
-    dataLayer.push(['config', TRACKING_ID, {client_storage: 'none', anonymize_ip: true}]);
-  }
+    const script = document.createElement('script');
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${config.TRACKING_ID}`;
+    script.async = true;
+    document.body.appendChild(script);
 
-  const script = document.createElement('script');
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-6LX83HX0LX";
-  script.async = true;
-  document.body.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){dataLayer.push(arguments)}
+    window.gtag('js', new Date());
+    window.gtag('config', config.TRACKING_ID, {client_storage: 'none', anonymize_ip: true});
+  }
 }
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
+  const router = useRouter()
 
   React.useEffect(() => {
+    if (typeof(window) === 'undefined') { return }
     ensureHTTPS(window);
     anonymousGoogleTracking(window)
   }, []);

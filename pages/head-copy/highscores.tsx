@@ -2,6 +2,8 @@ import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { getHighscores, getTotalCharacterDecoded } from '../../lib/head_copy/highscore_storage';
+import gameList from '../../lib/head_copy/game_list'
+import Game from '../../lib/head_copy/game';
 
 export default function Highscores() {
 
@@ -14,15 +16,15 @@ export default function Highscores() {
 
     function getHighscoreList() {
         let highscores = null
+        let mode = [].concat(query.mode)[0]
+        const game: Game = gameList.find((a) => a.id === mode)
         if (mode) {
             highscores = getHighscores(mode).map((h, idx) => {
                 const active = h.ts === scoreTime;
-                const t = new Date(h.ts)
-                const dateStr = `${t.getFullYear()}.${t.getMonth()+1}.${t.getDate()}`
                 return (
                     <Link key={h.ts} href={`#${h.ts}`}>
                         <li className={`${active ? 'text-blue-600' : ''}`}>
-                            {h.score} {h.percentCorrect ? "- " + h.percentCorrect + "%" : ""} @{h.wpm}wpm on {dateStr}
+                            {game.parseHighscore(h)}
                         </li>
                     </Link>
                 )
@@ -39,7 +41,7 @@ export default function Highscores() {
         return <div> Loading... </div>
     }
 
-    return <div className="container w-full md:max-w-4xl mx-auto pt-5 eightbit-font">
+    return <div className="container w-full md:max-w-4xl mx-auto pt-5 pb-5 eightbit-font">
         <div className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" >
         <h1>Highscores</h1>
         <h3 className="text-sm">Characters Decoded: {getTotalCharacterDecoded()}</h3>

@@ -10,7 +10,7 @@ export default function Footer() {
               <h3 className="font-bold text-gray-900">About Morse News</h3>
               <p className="py-4 text-gray-600 text-sm">
                 Morse News is an open source project by Mark Percival (KC4T) for the <a href="https://longislandcwclub.org/">Long Island CW Club</a>.
-                You can find the source code on <a href="https://github.com/mdp/morse_code_news">Github</a>
+                You can find the source code on <a href="https://github.com/mdp/morse.mdp.im">Github</a>
               </p>
             </div>
           </div>

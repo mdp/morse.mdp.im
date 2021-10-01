@@ -1,22 +1,32 @@
-import {turnGameList, streakGameList, rufzxpGameList} from '../../lib/head_copy/game_list';
 import Link from 'next/link'
+import { useRouter } from 'next/dist/client/router';
+import {turnGameList, streakGameList, rufzxpGameList} from '../../lib/head_copy/game_list';
+import Footer from '../../components/head-copy/footer'
+
+const subModes = [
+  {
+    name: "Normal Mode", id: "regular",
+    description: "50 turns, and the faster you answer the higher the score",
+    games: turnGameList
+  },
+  {
+    name: "Streak Mode", id: "streak",
+    description: "Three strikes and you're out",
+    games: streakGameList
+  },
+  {
+    name: "RufzXP Mode", id: "rufzxp",
+    description: "50 turns, answer correctly and you're rewarded with a faster speed",
+    games: rufzxpGameList
+  },
+]
 
 export default function Index() {
+  const router = useRouter();
+  const query = router.query;
+  const subModeParam = [].concat(query.submode)[0] || null;
 
-  function listGames(type) {
-    let gameList = []
-    switch(type) {
-      case 'regular':
-        gameList = turnGameList;
-        break;
-      case 'streak':
-        gameList = streakGameList;
-        break;
-      case 'rufzxp':
-        gameList = rufzxpGameList;
-        break;
-    }
-
+  function listGames(gameList: any[]) {
     return gameList.map((game) =>
       <li className="items-center my-2 px-4" key={game.id}>
         <Link href={`/head-copy/play/?mode=${game.id}`}>
@@ -24,6 +34,44 @@ export default function Index() {
           >{game.name}</button>
         </Link>
       </li>
+    )
+  }
+
+  function renderGameList(subModeId: string) {
+    const subMode = subModes.find((s)=>s.id === subModeId)
+    return (
+      <form className="w-full max-w-lg pb-10 mx-auto">
+        <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0 text-center">
+            <h3 className="text-2xl font-bold pt-2">{subMode.name}</h3>
+            <p className="text-base pt-1">{subMode.description}</p>
+            <ul>{listGames(subMode.games)}</ul>
+          </div>
+        </div>
+      </form>
+    )
+  }
+
+  function renderSubModeSelect() {
+    return (
+      <form className="w-full max-w-lg pb-10 mx-auto">
+        <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0 text-center">
+            <ul>
+              { subModes.map((mode)=>{
+                return (
+                  <li className="items-center my-2 px-4" key={mode.id}>
+                    <Link href={`?submode=${mode.id}`}>
+                      <button className="w-full justify-center rounded-md border border-gray-300 p-4"
+                      >{mode.name}</button>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </div>
+      </form>
     )
   }
 
@@ -37,27 +85,13 @@ export default function Index() {
           > 🧠 Head Copy ✍️ </h1>
         </header>
         <div className="px-10">
-          <form className="w-full max-w-lg pb-10 mx-auto">
-            <div className="flex flex-wrap -mx-3 mb-6">
-              <div className="w-full px-3 mb-6 md:mb-0 text-center">
-                <h3 className="text-2xl font-bold pt-2">Regular Mode</h3>
-                <p className="text-base pt-1">50 turns, and the faster you answer the higher your score.</p>
-                <ul>{listGames('regular')}</ul>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0 text-center">
-                <h3 className="text-2xl font-bold pt-2">Streak Mode</h3>
-                <p className="text-base pt-1">3 strikes and you're out. How long can you go?</p>
-                <ul>{listGames('streak')}</ul>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0 text-center">
-                <h3 className="text-2xl font-bold pt-2">RufzXP Mode</h3>
-                <p className="text-base pt-1">50 turns, answer correctly and you're rewarded with a faster speed.</p>
-                <ul>{listGames('rufzxp')}</ul>
-              </div>
-            </div>
-          </form>
+          { subModeParam ? 
+            renderGameList(subModeParam) :
+            renderSubModeSelect()
+          }
         </div>
       </div>
+      <Footer></Footer>
     </div>
   )
 

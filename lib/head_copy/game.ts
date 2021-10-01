@@ -101,6 +101,13 @@ abstract class Game {
     unloadData(): void {
     }
 
+    // Allow games to customize their scores
+    parseHighscore(h): string {
+        const t = new Date(h.ts)
+        const dateStr = `${t.getFullYear()}.${t.getMonth() + 1}.${t.getDate()}`
+        return `${h.score} ${h.percentCorrect ? "- " + h.percentCorrect + "%" : ""} @${h.wpm}wpm on ${dateStr}`
+    }
+
 }
 
 export interface AsyncData {
