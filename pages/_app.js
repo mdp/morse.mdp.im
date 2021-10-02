@@ -43,6 +43,9 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Morse.mdp.im</title>
+        <link rel="icon" href="/favicon-32x32.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <Component {...pageProps} />
     </>
