@@ -1,6 +1,6 @@
 import { CallSignGameRufzxp, CallSignGameStreak, CallSignGameTurns } from "./games/callsign_game";
 import Game, { FetchData } from "./game";
-import { RandomCharsTurns, LETTERS, RandomCharsStreak, RandomCharsRufzxp } from "./games/random_chars";
+import { RandomCharsTurns, LETTERS, RandomCharsStreak, RandomCharsRufzxp, NUMBERS } from "./games/random_chars";
 import { WordGameRufzxp, WordGameStreak, WordGameTurns } from "./games/word_game";
 
 
@@ -36,6 +36,22 @@ export const turnGameList: Game[] = [
         charSet: LETTERS,
         turns: 50,
         length: 6,
+    }),
+    new RandomCharsTurns({
+        id: "random_five_letters_numbers",
+        name: "Random 5 Letters and Numbers",
+        description: "5 letters and numbers at random",
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        turns: 50,
+        length: 5,
+    }),
+    new RandomCharsTurns({
+        id: "random_four_numbers",
+        name: "Random 4 Numbers",
+        description: "4 numbers at random",
+        charSet: NUMBERS,
+        turns: 50,
+        length: 4,
     }),
     new WordGameTurns({
         id: "2-words",
@@ -91,6 +107,22 @@ export const streakGameList: Game[] = [
         lives: 3,
         length: 5,
     }),
+    new RandomCharsStreak({
+        id: "random_five_letters_numbers_streak",
+        name: "Random 5 Letters and Numbers",
+        description: "5 letters and numbers at random",
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        lives: 3,
+        length: 5,
+    }),
+    new RandomCharsStreak({
+        id: "random_four_numbers_streak",
+        name: "Random 4 Numbers",
+        description: "4 numbers at random",
+        charSet: NUMBERS,
+        lives: 3,
+        length: 4,
+    }),
     new WordGameStreak({
         id: "2-words-streak",
         name: "2 Random Words",
@@ -144,6 +176,22 @@ export const rufzxpGameList: Game[] = [
         charSet: LETTERS,
         turns: 50,
         length: 5,
+    }),
+    new RandomCharsRufzxp({
+        id: "random_five_letters_numbers_rufzxp",
+        name: "Random 5 Letters and Numbers",
+        description: "5 letters and numbers at random",
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        turns: 50,
+        length: 5,
+    }),
+    new RandomCharsRufzxp({
+        id: "random_four_numbers_rufzxp",
+        name: "Random 4 Numbers",
+        description: "4 numbers at random",
+        charSet: NUMBERS,
+        turns: 50,
+        length: 4,
     }),
     new WordGameRufzxp({
         id: "2-words-rufzxp",
