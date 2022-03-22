@@ -4,22 +4,20 @@
   "description": "News headlines in Morse Code",
   "main": "index.js",
   "scripts": {
-    "build_podcast_audio": "node podcast/index.js",
-    "build_podcast_rss": "node podcast/rss.js",
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "deploy": "rm -rf out && next build && next export && aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*'"
+    "start": "next start"
   },
   "author": "Mark Percival <m@mdp.im>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.54.1",
     "autoprefixer": "^10.3.1",
     "html-entities": "^1.3.1",
     "morse-pro": "^2.0.0",
     "newsapi": "^2.4.0",
-    "next": "^11.1.2",
-    "podcast": "^1.3.0",
+    "next": "^12.1.0",
+    "podcast": "^2.0.0",
     "postcss": "^8.3.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -32,10 +30,13 @@
     "@types/jest": "^26.0.24",
     "@types/node": "^14.11.1",
     "@types/react": "^16.9.49",
+    "commander": "^9.1.0",
+    "dotenv": "^16.0.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
     "jest": "^27.0.6",
     "ts-jest": "^27.0.4",
+    "ts-node": "^10.7.0",
     "typescript": "^4.0.3"
   }
 }

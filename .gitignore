@@ -4,3 +4,4 @@ out
 cache
 podcast/keys.json
 config.js
+.env
