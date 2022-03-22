@@ -5,13 +5,13 @@ import { XmlEntities as Entities } from 'html-entities'
 const entities = new Entities();
 
 export async function buildPodcast(podcasts: PodcastEpisode[]) {
-    const wpm = podcasts[0].wpm;
+    const fwpm = podcasts[0].fwpm;
     const feed = new Podcast({
-      title: `News Headlines in Morse Code at ${wpm} WPM`,
+      title: `News Headlines in Morse Code at ${fwpm} WPM`,
       description: 'News Headlines in Morse code, updated daily',
-      feedUrl: `https://morse.mdp.im/podcast/rss-${wpm}.xml`,
+      feedUrl: `https://morse.mdp.im/podcast/rss-${fwpm}.xml`,
       siteUrl: `https://morse.mdp.im/news`,
-      imageUrl: `https://morse.mdp.im/podcast_cover_${wpm}.jpg`,
+      imageUrl: `https://morse.mdp.im/podcast_cover_${fwpm}.jpg`,
       author: 'Mark Percival',
       managingEditor: 'Mark Percival',
       webMaster: 'Mark Percival',
@@ -31,7 +31,7 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
           "text": "Daily News"
         }]
       }],
-      itunesImage: `https://morse.mdp.im/podcast_cover_${wpm}.jpg`,
+      itunesImage: `https://morse.mdp.im/podcast_cover_${fwpm}.jpg`,
     });
     for (let j=0; podcasts.length > j; j++) {
       let episode: PodcastEpisode = podcasts[j]
