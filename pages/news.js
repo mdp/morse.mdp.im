@@ -15,10 +15,10 @@ const fetcher = (...args) => fetch(...args).then(res => res.json())
 export default function Index() {
   let createdOn = '...';
   let headlines = [];
-  const {data, err} = useSWR("https://morse.mdp.im/podcast/news_headlines.json", fetcher);
+  const {data, err} = useSWR("https://morse.mdp.im/podcast/headlines.json", fetcher);
   if (data) {
-    headlines = data.headlines;
-    createdOn = data.createdOn;
+    headlines = data.content;
+    createdOn = new Date(data.timestamp).toISOString();
   }
 
   const [currentTrackIdx, setCurrentTrackIdx] = useState(-1)

@@ -50,18 +50,6 @@ export class Podcast {
         return `https://${this.bucket}/${this.key}`
     }
 
-    mp3Key(): string {
-        return this.key.replace(/\..+$/, '.mp3')
-    }
-
-    audioUrl(): string {
-        return `https://${this.bucket}/${this.mp3Key()}`
-    }
-
-    date(): Date {
-        return new Date(this.timestamp)
-    }
-
     async fetch(): Promise<PodcastJson> {
         if (this._content) {
             return this._content
@@ -72,22 +60,40 @@ export class Podcast {
         return this._content
     }
 
-    async transcription(): Promise<string> {
-        const c = await this.fetch()
-        return c.transcription
+    get audioKey(): string {
+        this.ensureFetched()
+        return this._content.audioKey
     }
 
-    async size(): Promise<number> {
-        const c = await this.fetch()
-        return c.size
+    get audioUrl(): string {
+        return `https://${this.bucket}/${this.audioKey}`
+    }
+
+    get date(): Date {
+        return new Date(this.timestamp)
+    }
+
+    get transcription(): string {
+        this.ensureFetched()
+        return this._content.transcription
+    }
+
+    get size(): number {
+        this.ensureFetched()
+        return this._content.size
     }
 
     async destroy(): Promise<void> {
+        await this.fetch()
         await this.s3client.send(new DeleteObjectCommand({Bucket: this.bucket, Key: this.key}));
-        try {
-            await this.s3client.send(new DeleteObjectCommand({Bucket: this.bucket, Key: this.mp3Key()}));
-        } catch(err) {
-            console.log('unable to delete mp3 of ', this.key)
+        console.log("Deleted: ", this.key)
+        await this.s3client.send(new DeleteObjectCommand({Bucket: this.bucket, Key: this.audioKey}));
+        console.log("Deleted: ", this.audioKey)
+    }
+
+    private ensureFetched(): void {
+        if (!this._content) {
+            throw new Error("Fetch first")
         }
     }
 

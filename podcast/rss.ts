@@ -35,15 +35,16 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
     });
     for (let j=0; podcasts.length > j; j++) {
       let episode: PodcastEpisode = podcasts[j]
-      const content = await episode.transcription()
+      await episode.fetch()
+      const content = await episode.transcription
       feed.addItem({
         title: `News Headlines at ${episode.fwpm}`,
         description: entities.encode(content),
-        url: episode.audioUrl(), // link to the item
-        date: episode.date(),
+        url: episode.audioUrl, // link to the item
+        date: episode.date,
         enclosure : {
-          url: episode.audioUrl(),
-          size: await episode.size(),
+          url: episode.audioUrl,
+          size: await episode.size,
           type: 'audio/mpeg'
         },
         itunesAuthor: 'Mark Percival',

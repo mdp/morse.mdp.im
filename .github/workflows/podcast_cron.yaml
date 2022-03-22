@@ -22,8 +22,9 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        yarn ts-node podcast/bin/new_podcast.ts -f 15 -w 20 --prefix podcast morse.mdp.im && \
-        yarn ts-node podcast/bin/new_podcast.ts -f 20 -w 20 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/new_podcast.ts -f 10 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/new_podcast.ts -f 15 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/new_podcast.ts -f 20 -w 25 --prefix podcast morse.mdp.im && \
         yarn ts-node podcast/bin/new_podcast.ts -f 25 -w 25 --prefix podcast morse.mdp.im
     - name: Update RSS
       env:
@@ -31,4 +32,13 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        echo "In the future, update RSS here"
+        yarn ts-node podcast/bin/update_rss.ts -f 10 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/update_rss.ts -f 15 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/update_rss.ts -f 20 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/update_rss.ts -f 25 -w 25 --prefix podcast morse.mdp.im
+    - name: Update Headlines for website
+      env:
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: yarn ts-node podcast/bin/update_headlines.ts --prefix podcast morse.mdp.im

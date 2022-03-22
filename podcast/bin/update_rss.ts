@@ -28,8 +28,8 @@ const s3Client = new S3Client({region: 'us-east-1'});
 program
   .requiredOption('-f, --fwpm <num>')
   .requiredOption('-w, --wpm <num>')
-  .option('--expired <num>', 'expired after x episodes', '30')
-  .option('--deleted <num>', 'deleted after x episodes', '45')
+  .option('--expireAfter <num>', 'expired after x episodes', '30')
+  .option('--deleteAfter <num>', 'deleted after x episodes', '45')
   .option('--prefix <string>')
   .argument("<string>", "bucket")
 
@@ -40,22 +40,50 @@ async function main() {
     const opts = program.opts()
     const bucket = program.args[0]
     const prefix = opts['prefix'] || ""
+
+    const expireAfter = opts['expireAfter'] || ""
+    const deleteAfter = opts['deleteAfter'] || ""
+
     const wpm = parseInt(opts['wpm'], 10)
     const fwpm = parseInt(opts['fwpm'], 10)
 
     const objs = await s3Client.send(new ListObjectsCommand({Bucket: bucket, Prefix: prefix}));
 
-    const podcasts = objs.Contents.map((obj) => new Podcast({key: obj.Key, bucket, s3Client})).filter((p) =>
+    const allPodcasts = objs.Contents.map((obj) => new Podcast({key: obj.Key, bucket, s3Client})).filter((p) =>
         p.type === 'json' && p.wpm === wpm && p.fwpm == fwpm
-    );
-    console.log(`${podcasts.length} Podcasts to be published`)
-    const rss = await buildPodcast(podcasts)
+    ).sort((a, b) => (a.timestamp > b.timestamp)? -1 : 1);
+
+    allPodcasts.forEach((p) => console.log(new Date(p.timestamp).toISOString()))
+
+    const currentPodcasts: Podcast[] = [];
+    const deletedPodcasts: Podcast[] = [];
+
+    // Only list the most recent podcasts
+    if (allPodcasts.length > expireAfter) {
+        currentPodcasts.push(...allPodcasts.slice(0, expireAfter))
+    } else {
+        currentPodcasts.push(...allPodcasts)
+    }
+
+    if (allPodcasts.length > deleteAfter) {
+        deletedPodcasts.push(...allPodcasts.slice(deleteAfter))
+    }
+
+    console.log(`${currentPodcasts.length} Podcasts to be published`)
+    console.log(`${deletedPodcasts.length} Podcasts to be deleted`)
+
+    const rss = await buildPodcast(currentPodcasts)
     await s3Client.send(new PutObjectCommand({
         Bucket: bucket,
         Key: `${prefix}/rss-${fwpm}.xml`, 
         Body: rss,
         ContentType: "application/rss+xml",
     }))
+    
+    for (const podcast of deletedPodcasts) {
+        await podcast.destroy()
+    }
+    
 }
 
 main().then(() => process.exit()).catch((err) => {

@@ -3,12 +3,11 @@ import { Command } from 'commander';
 const program = new Command();
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { Podcast, PodcastJson } from '../podcast';
+import { PodcastJson } from '../podcast';
 import { generate } from '../generate';
 import { fetchHeadlines, headlinesToMorse } from '../headlines';
 import path from 'path';
 import { writeFile, readFile } from 'fs/promises';
-import { time } from 'console';
 
 const s3Client = new S3Client({region: 'us-east-1'});
 
@@ -43,7 +42,6 @@ async function main() {
     const filePrefix = `News_headlines-1x-${wpm}x${fwpm}-${now}`
     const pathPrefix = path.join(tmpDir, filePrefix)
     const keyPrefix = `${prefix}/${filePrefix}`
-    const headlinesJsonKey = `${prefix}/headlines.json`
 
 
     const length = await generate({wpm, fwpm, content: headlineMorse, out: pathPrefix});
@@ -73,11 +71,6 @@ async function main() {
             ContentType: "audio/mpeg"
         }))
 
-        // Upload JSON for Website
-        await s3Client.send(new PutObjectCommand({
-            Bucket: bucket, Key: headlinesJsonKey, Body: JSON.stringify(json),
-            ContentType: "application/json"
-        }))
     }
 
 

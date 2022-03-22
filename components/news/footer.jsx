@@ -23,7 +23,7 @@ export default function Footer() {
               <p className="py-4 text-gray-600 text-sm">
                 The headlines on this site are also available as a podcast and available
                 on <a href="https://podcasts.apple.com/us/podcast/id1531399638">iTunes</a> or
-                using the RSS feed at <a href="/podcast/rss-15.xml">15 wpm</a>, <a href="/podcast/rss-20.xml">20 wpm</a>, or <a href="/podcast/rss-25.xml">25 wpm</a>.
+                using the RSS feed at <a href="/podcast/rss-10.xml">10 wpm</a>, <a href="/podcast/rss-15.xml">15 wpm</a>, <a href="/podcast/rss-20.xml">20 wpm</a>, or <a href="/podcast/rss-25.xml">25 wpm</a>.
               </p>
             </div>
           </div>
