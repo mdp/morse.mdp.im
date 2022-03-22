@@ -10,7 +10,7 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
       title: `News Headlines in Morse Code at ${wpm} WPM`,
       description: 'News Headlines in Morse code, updated daily',
       feedUrl: `https://morse.mdp.im/podcast/rss-${wpm}.xml`,
-      siteUrl: `https://morse.mdp.im/#${wpm}wpm`,
+      siteUrl: `https://morse.mdp.im/news`,
       imageUrl: `https://morse.mdp.im/podcast_cover_${wpm}.jpg`,
       author: 'Mark Percival',
       managingEditor: 'Mark Percival',
