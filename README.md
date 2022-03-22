@@ -1,12 +1,16 @@
 # Morse Training App
 
-This webapp started as Morse Code Headlines, which produces both a [podcast](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-25-wpm/id1536964268), and a [website](https://morse.mdp.im) with up to date headlines.
+![image](https://user-images.githubusercontent.com/2868/159538162-8cfd7695-3418-41bd-9e1f-2efdd36b2920.png)
 
-Lately I've been updating it to include a [mobile optimized Morse trainer focused on headcopy](https://morse.mdp.im/head-copy/)
+**A [webbased game](https://morse.mdp.im/head-copy) and [podcast](https://morse.mdp.im/news/) focused on learning to "head copy" morse code.**
 
-### Credits
+-----
+
+## Credits
 
 Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for his excellent [Morse Pro library](https://github.com/scp93ch/morse-pro) which I use to create the mp3 files for the headlines. Credit also goes to Kurt Zoglmann who [open sourced](https://morsecode.ninja/) [Morse Code Ninja](https://morsecode.ninja/) where I was able to get great word/callsign/training lists from. 
+
+-----
 
 ## Headcopy Mobile Game
 
@@ -66,8 +70,3 @@ Assumes you have the required env variables (NEWSAPI_KEY and AWS keys)
 #### Update headlines.json (updates website headline game)
 
 `yarn ts-node podcast/bin/update_headlines.ts --prefix podcast morse.mdp.im`
-
-```
-yar
-```
-
