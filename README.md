@@ -26,10 +26,6 @@ Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for hi
 - Should be easy for developers to implement new game modes and game data (e.g. Top 100 words, DXCC100 Calls, etc.)
 - Open source and free forever!
 
-### Current Status
-
-It's live in an early beta, but I'm sure there are bugs.
-
 ### Requirements
 
 - Node >= 14.x
@@ -53,13 +49,25 @@ This is both a web application and a podcast generator.
 
 ### Deployment
 
-### Build the required docker image
-docker build . -t mpercival/morsenews
+All deployment is scheduled and handled via Github Actions
 
-### Generate and deploy a new episode of the podcast
+## Generate and deploy a podcast locally
 
-docker run --rm -it -v ~/.s3cfg:/root/.s3cfg -v $(pwd)/cache:/usr/src/app/cache  mpercival/morsenews ./generate_podcast.sh
+Assumes you have the required env variables (NEWSAPI_KEY and AWS keys)
 
-## Generate and deploy the latest website
+#### Create a new podcast and upload it to S3 (15wpm / 25wpm character speed)
 
-`yarn next build && yarn next export && aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*'`
+`yarn ts-node podcast/bin/new_podcast.ts -w 15 -f 25 --prefix podcast morse.mdp.im`
+
+#### Update RSS feed (15/25wpm) based on S3 contents
+
+`yarn ts-node podcast/bin/update_rss.ts -w 15 -f 25 --prefix podcast morse.mdp.im`
+
+#### Update headlines.json (updates website headline game)
+
+`yarn ts-node podcast/bin/update_headlines.ts --prefix podcast morse.mdp.im`
+
+```
+yar
+```
+
