@@ -31,4 +31,4 @@ jobs:
     - name: Build nextjs
       run: yarn next build && yarn next export
     - name: Deploy to s3
-      run: aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*'
+      run: aws s3 sync out/. s3://morse.mdp.im/ --exclude 'podcast/*' --exclude 'rss-*.xml' --delete
