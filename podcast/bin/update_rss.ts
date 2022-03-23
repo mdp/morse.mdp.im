@@ -79,6 +79,15 @@ async function main() {
         Body: rss,
         ContentType: "application/rss+xml",
     }))
+
+    // Legacy publishing until this feeds go away
+    await s3Client.send(new PutObjectCommand({
+        Bucket: bucket,
+        Key: `rss-${fwpm}.xml`, 
+        Body: rss,
+        ContentType: "application/rss+xml",
+    }))
+    
     
     for (const podcast of deletedPodcasts) {
         await podcast.destroy()
