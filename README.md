@@ -1,4 +1,5 @@
 # Morse Training App
+![Podcast Deploy](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml/badge.svg) ![CI](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml/badge.svg)
 
 ![image](https://user-images.githubusercontent.com/2868/159538162-8cfd7695-3418-41bd-9e1f-2efdd36b2920.png)
 

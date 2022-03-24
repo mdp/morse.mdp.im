@@ -1,4 +1,4 @@
-name: Build podcast once a day
+name: Podcast Production
 
 on:
   schedule:
