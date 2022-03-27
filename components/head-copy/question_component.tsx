@@ -71,7 +71,8 @@ export function Turn({question, onComplete, onNext, gameOver}: TurnProps) {
   }
 
   function renderAudio() {
-    return <MorseAudio text={state.content} wpm={question.wpm} fwpm={question.fwpm} freq={question.freq} onComplete={audioPlayComplete}></MorseAudio>
+    const gameSettings = question.gameSettings
+    return <MorseAudio text={state.content} wpm={gameSettings.wpm} fwpm={gameSettings.fwpm} freq={gameSettings.freq} preDelay={gameSettings.preDelay} onComplete={audioPlayComplete}></MorseAudio>
   }
 
   if (state.questionId !== question.id) {

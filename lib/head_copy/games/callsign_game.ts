@@ -48,9 +48,7 @@ function buildQuestionFromCallList(callList: CallList,
         phrase: [],
         answers: [],
         spaced,
-        wpm: gameState.wpm,
-        fwpm: gameState.fwpm,
-        freq: gameState.freq,
+        gameSettings: gameState.gameSettings
     }
     const phrasePick = randomPick(callList.phrases);
     const phraseLen = phrasePick.length

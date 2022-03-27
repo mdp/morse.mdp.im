@@ -29,9 +29,7 @@ export const questionFromPhraseList = function(phraseList: PhraseList,
           phrase: [],
           answers: [],
           spaced,
-          wpm: gameState.wpm,
-          fwpm: gameState.fwpm,
-          freq: gameState.freq,
+          gameSettings: gameState.gameSettings,
       }
       const phrasePick = randomPick(phraseList.phrases);
       for (let j=0; j < phrasePick.length; j++) {

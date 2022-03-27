@@ -12,6 +12,8 @@ const morseSettingsState = createPersistedState('morseSettings');
 const MINIMUM_WPM = 5;
 const MINIMUM_FREQ = 400;
 const MAXIMUM_FREQ = 1200;
+const MINIMUM_PREDELAY = 100;
+const MAXIMUM_PREDELAY = 2000;
 
 export default function GameRunner({ mode }: { mode: string }) {
   const game: Game | null = gameList.find((a) => a.id === mode) || null
@@ -20,10 +22,12 @@ export default function GameRunner({ mode }: { mode: string }) {
     wpm: 20,
     fwpm: 20,
     freq: 700,
+    preDelay: 300,
   })
 
   const defaultState = {
     runState: "stopped",
+    advancedSettings: false,
     gameState: game.getInitialState(morseSettings),
     lastScore: null,
     charactersDecoded: 0,
@@ -43,7 +47,7 @@ export default function GameRunner({ mode }: { mode: string }) {
     }
     return (
       <div className="w-full px-3 mb-6 md:mb-0">
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mt-2 mb-1" htmlFor="grid-first-name">
           {name}
         </label>
         <input
@@ -73,6 +77,12 @@ export default function GameRunner({ mode }: { mode: string }) {
     const gameState = game.onAnswer(answers, state.gameState)
     setState({...state,
       gameState
+    })
+  }
+
+  function onAdvancedClick() {
+    setState({...state,
+      advancedSettings: !state.advancedSettings
     })
   }
 
@@ -133,6 +143,8 @@ export default function GameRunner({ mode }: { mode: string }) {
 
     if (morseSettings.freq > MAXIMUM_FREQ) {morseSettings.freq = MAXIMUM_FREQ}
     if (morseSettings.freq < MINIMUM_FREQ) {morseSettings.freq = MINIMUM_FREQ}
+    if (morseSettings.preDelay > MAXIMUM_PREDELAY) {morseSettings.preDelay = MAXIMUM_PREDELAY}
+    if (morseSettings.preDelay < MINIMUM_PREDELAY) {morseSettings.preDelay = MINIMUM_PREDELAY}
     setMorseSettings(newSettings)
     setState({...state, morseSettings: newSettings})
   }
@@ -186,10 +198,16 @@ export default function GameRunner({ mode }: { mode: string }) {
           </header>
           <div className="px-10">
             <form className="w-full max-w-lg pb-10 mx-auto">
-              <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="flex flex-wrap -mx-3 mb-5">
                 {getGameSetting('wpm', 'WPM')}
                 {getGameSetting('fwpm', 'Farnsworth')}
-                {getGameSetting('freq', 'Frequency')}
+                <div className="w-full">
+                  <div className="mx-3 py-2 text-green-800 text-sm" onClick={onAdvancedClick} style={{display: (state.advancedSettings ? "none": "block")}}>Advanced Settings</div>
+                  <div className="flex flex-wrap" style={{display: (state.advancedSettings ? "block" : "none")}}>
+                    {getGameSetting('freq', 'Frequency')}
+                    {getGameSetting('preDelay', 'Audio Delay (for BT headphones)')}
+                  </div>
+                </div>
               </div>
             </form>
 

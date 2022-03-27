@@ -4,6 +4,7 @@ export interface GameSettings {
     wpm: number
     fwpm: number
     freq: number
+    preDelay: number
 }
 
 // Represents a single question
@@ -12,18 +13,15 @@ export interface Question {
     spaced: boolean
     phrase: string[]
     answers: string[][]
-    wpm: number
-    fwpm: number
-    freq: number
+    gameSettings: GameSettings
 }
+
 export interface GameState {
     score: number
     charactersDecoded: number
     progress: string
     isComplete: boolean
-    wpm: number
-    fwpm: number
-    freq: number
+    gameSettings: GameSettings
 }
 
 export interface Answer {

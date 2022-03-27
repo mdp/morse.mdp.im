@@ -43,7 +43,7 @@ export default function score(answers: Answer[], gameState: GameState): ScoreRes
     const speedPenalty = score * speedPenaltyFactor
 
     // WPM Bonus
-    const speedBonusFactor = (gameState.fwpm + 5) / 10 // Every 10wpm above 5 wpm bumps up the score by 1x
+    const speedBonusFactor = (gameState.gameSettings.fwpm + 5) / 10 // Every 10wpm above 5 wpm bumps up the score by 1x
     // (5wpm + 5) / 10 = 1x
     // (10wpm + 5) / 10 = 1.5x
     // (15wpm + 5) / 10 = 2x
@@ -53,6 +53,6 @@ export default function score(answers: Answer[], gameState: GameState): ScoreRes
       score: Math.floor((score * speedBonusFactor) - speedPenalty),
       correctlyAnswered,
       correctlyDecoded,
-      wpm: gameState.fwpm,
+      wpm: gameState.gameSettings.fwpm,
     }
   }

@@ -5,7 +5,7 @@ import { TurnBasedGame, TurnBasedGameState } from "./turn_based_game";
 const SPEED_RANGE = 1.6; // 25wpm should top out at 40wpm 1.6x on a perfect game
 
 export abstract class RufzxpGame extends TurnBasedGame {
-    readonly settingsAllowed = ["wpm", "freq"] // Farnsworth makes no sense here since it's unclear how we'd increase both progressively
+    readonly settingsAllowed = ["wpm", "freq", "preDelay"] // Farnsworth makes no sense here since it's unclear how we'd increase both progressively
 
     onAnswer(answers: Answer[], gameState: TurnBasedGameState): TurnBasedGameState {
         const state = super.onAnswer(answers, gameState);
@@ -17,8 +17,8 @@ export abstract class RufzxpGame extends TurnBasedGame {
         const step = speedRange / this.turns;
         const speedChange = Math.floor(step * correctScoreTally)
 
-        state.wpm = startingSpeed + speedChange;
-        state.fwpm = state.wpm;
+        state.gameSettings.wpm = startingSpeed + speedChange;
+        state.gameSettings.fwpm = state.gameSettings.wpm;
 
         return state
     }

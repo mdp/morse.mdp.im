@@ -78,9 +78,7 @@ function buildQuestionRandomGroup({spaced, length, charSet}: {spaced: boolean, l
         phrase: [pick],
         answers:[answers],
         spaced,
-        wpm: gameState.wpm,
-        fwpm: gameState.fwpm,
-        freq: gameState.freq,
+        gameSettings: gameState.gameSettings,
     }
     return q
 }

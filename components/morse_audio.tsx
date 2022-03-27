@@ -45,8 +45,8 @@ export default function MorseAudio(props: MorseAudioProps) {
         // On mobile(ios with bluetooth) we need to lead with some space.
         // On bluetooth it seems to launch the sound and quickly fade in the
         // audio which clips the first dit sometimes
-        timings.unshift(props.preDelay || -300) // 300ms seems reasonable
-        timings.push(props.postDelay || -100) // 100ms to try and stop end clipping on Firefox for Windows
+        timings.unshift((props.preDelay * -1) || -300) // 300ms seems reasonable
+        timings.push((props.postDelay * -1) || -100) // 100ms to try and stop end clipping on Firefox for Windows
         timings.push(0) // Cleanly ends the audio in iOS and mac
 
         const sample = MorseCWWave.getSampleGeneral(timings, props.freq || 700, morseCWWave.sampleRate, 10);

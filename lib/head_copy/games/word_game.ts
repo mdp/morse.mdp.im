@@ -28,9 +28,7 @@ export const questionFromWordList = function(wordList: WordList,
           phrase: [],
           answers: [],
           spaced,
-          wpm: gameState.wpm,
-          fwpm: gameState.fwpm,
-          freq: gameState.freq,
+          gameSettings: gameState.gameSettings
       }
       const wordPicks = []
       for (let i=0; i < phraseWordCount; i++) {

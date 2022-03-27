@@ -23,16 +23,14 @@ function getProgress(_lives, wrongAnswers=0): string {
 export abstract class StreakBasedGame extends Game {
     abstract readonly lives: number
 
-    getInitialState({wpm, fwpm, freq}: GameSettings): StreakBasedGameState {
+    getInitialState(gameSettings: GameSettings): StreakBasedGameState {
         return {
-            wpm,
-            fwpm,
-            freq,
             progress: getProgress(this.lives),
             score: 0,
             charactersDecoded: 0,
             isComplete: false,
             scoreResults: [],
+            gameSettings,
         }
     }
 
@@ -55,7 +53,7 @@ export abstract class StreakBasedGame extends Game {
         return [{
             mode: this.id,
             score: gameState.score,
-            wpm: gameState.fwpm,
+            wpm: gameState.gameSettings.fwpm,
             ts: Date.now()
         }, gameState.charactersDecoded]
     }

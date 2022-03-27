@@ -16,17 +16,15 @@ export interface TurnBasedGameArgs extends DefaultGameArgs {
 export abstract class TurnBasedGame extends Game {
     abstract readonly turns: number
 
-    getInitialState({wpm, fwpm, freq}: GameSettings): TurnBasedGameState {
+    getInitialState(gameSettings: GameSettings): TurnBasedGameState {
         return {
-            wpm,
-            fwpm,
-            freq,
             progress: "1/" + this.turns,
             turnIdx: 0,
             score: 0,
             charactersDecoded: 0,
             isComplete: false,
             scoreResults: [],
+            gameSettings,
         }
     }
 
@@ -56,7 +54,7 @@ export abstract class TurnBasedGame extends Game {
         return [{
             mode: this.id,
             score: gameState.score,
-            wpm: gameState.fwpm,
+            wpm: gameState.gameSettings.fwpm,
             percentCorrect,
             ts: Date.now()
         }, gameState.charactersDecoded]
