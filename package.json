@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start"
   },
+  "engines" : { 
+    "node" : ">=17.0.0"
+  },
   "author": "Mark Percival <m@mdp.im>",
   "license": "MIT",
   "dependencies": {

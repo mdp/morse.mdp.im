@@ -16,7 +16,7 @@ function ensureHTTPS(window) {
 // Privacy preserving Google Analytics, no cookies and an anonymized IP
 // Only tracks pageviews for usage stats, no user or session tracking
 function anonymousGoogleTracking(window) {
-  if (window) {
+  if (window && !!config.TRACKING_ID) {
     const script = document.createElement('script');
     script.src = `https://www.googletagmanager.com/gtag/js?id=${config.TRACKING_ID}`;
     script.async = true;
