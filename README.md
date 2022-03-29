@@ -33,14 +33,18 @@ Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for hi
 
 ### Requirements
 
-- Node >= 14.x
+- Node >= 17.x
 
 ### Development
+
+The easiest way to get started is to fork this project and open up a Github Codespace. It should work out of the box.
+
+If you want to develop on your own machine, use the following:
 
 - `git clone `
 - `cd morse.mdp.im`
 - `yarn install`
-- `yarn run dev`
+- `yarn dev`
 - Open your browser to localhost:3000/head-copy/
 
 ## Morse Code Headlines
@@ -49,14 +53,15 @@ This is both a web application and a podcast generator.
 
 ### Requirements
 
-- Node >= 14.x
+- Node >= 17.x
 - ffmpeg installed
 
-### Deployment
+## Deployment
 
-All deployment is scheduled and handled via Github Actions
+All deployment is scheduled and handled via Github Actions, however, it's possible
+to deploy a podcast to your own AWS S3 bucket using the following:
 
-## Generate and deploy a podcast locally
+### Generate and deploy a podcast locally
 
 Assumes you have the required env variables (NEWSAPI_KEY and AWS keys)
 
