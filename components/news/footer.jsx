@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="w-full mx-auto flex flex-wrap">
           <div className="flex w-full md:w-1/2">
             <div className="px-8">
-              <h3 className="font-bold text-gray-900">About <a href="/">morse.mdp.im</a></h3>
+              <h3 className="font-bold text-gray-900">About <Link href="/">morse.mdp.im</Link></h3>
               <p className="py-4 text-gray-600 text-sm">
                 Morse News is an open source project by Mark Percival (KC4T) for the <a href="https://longislandcwclub.org/">Long Island CW Club</a>.
                 You can find the source code on <a href="https://github.com/mdp/morse.mdp.im">Github</a>
