@@ -2,7 +2,7 @@
 [![Podcast Deploy](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml)
 [![CI](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml)
 
-![image](https://user-images.githubusercontent.com/2868/159538162-8cfd7695-3418-41bd-9e1f-2efdd36b2920.png)
+[![MorseHeadCopy](https://user-images.githubusercontent.com/2868/160646418-083953b9-c6f2-4a61-a15b-97e8c863986b.png)](/)
 
 **A [webbased game](https://morse.mdp.im/head-copy) and [podcast](https://morse.mdp.im/news/) focused on learning to "head copy" morse code.**
 
