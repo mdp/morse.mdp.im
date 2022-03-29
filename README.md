@@ -1,7 +1,8 @@
 # Morse Training App
-![Podcast Deploy](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml/badge.svg) ![CI](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml/badge.svg)
+[![Podcast Deploy](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml)
+[![CI](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml)
 
-![image](https://user-images.githubusercontent.com/2868/159538162-8cfd7695-3418-41bd-9e1f-2efdd36b2920.png)
+[![MorseHeadCopy](https://user-images.githubusercontent.com/2868/160646418-083953b9-c6f2-4a61-a15b-97e8c863986b.png)](/)
 
 **A [webbased game](https://morse.mdp.im/head-copy) and [podcast](https://morse.mdp.im/news/) focused on learning to "head copy" morse code.**
 
@@ -9,7 +10,7 @@
 
 ## Credits
 
-Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for his excellent [Morse Pro library](https://github.com/scp93ch/morse-pro) which I use to create the mp3 files for the headlines. Credit also goes to Kurt Zoglmann who [open sourced](https://morsecode.ninja/) [Morse Code Ninja](https://morsecode.ninja/) where I was able to get great word/callsign/training lists from. 
+Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for his excellent [Morse Pro library](https://github.com/scp93ch/morse-pro) which I use to create the mp3 files for the headlines. Credit also goes to Kurt Zoglmann who [open sourced](https://github.com/zoglmannk/Morse-Code-Ninja) [Morse Code Ninja](https://morsecode.ninja/) where I was able to get great word/callsign/training lists from. 
 
 -----
 
@@ -33,14 +34,18 @@ Most of the credit goes to [Stephen C. Phillips](https://scphillips.com/) for hi
 
 ### Requirements
 
-- Node >= 14.x
+- Node >= 17.x
 
 ### Development
+
+The easiest way to get started is to fork this project and open up a Github Codespace. It should work out of the box.
+
+If you want to develop on your own machine, use the following:
 
 - `git clone `
 - `cd morse.mdp.im`
 - `yarn install`
-- `yarn run dev`
+- `yarn dev`
 - Open your browser to localhost:3000/head-copy/
 
 ## Morse Code Headlines
@@ -49,14 +54,15 @@ This is both a web application and a podcast generator.
 
 ### Requirements
 
-- Node >= 14.x
+- Node >= 17.x
 - ffmpeg installed
 
-### Deployment
+## Deployment
 
-All deployment is scheduled and handled via Github Actions
+All deployment is scheduled and handled via Github Actions, however, it's possible
+to deploy a podcast to your own AWS S3 bucket using the following:
 
-## Generate and deploy a podcast locally
+### Generate and deploy a podcast locally
 
 Assumes you have the required env variables (NEWSAPI_KEY and AWS keys)
 
