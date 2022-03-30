@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, ReactFragment, useState } from 'react'
 import createPersistedState from 'use-persisted-state';
 
 import { QuestionComponent }from './question_component'
@@ -37,7 +37,7 @@ export default function GameRunner({ mode }: { mode: string }) {
     game.load().then(() => setState({...state, runState: 'loaded'}))
   }
 
-  function getGameSetting(key: string, name: string) {
+  function getGameSetting(key: string, name: string | ReactFragment) {
     if (game.settingsAllowed && !game.settingsAllowed.includes(key)) {
       return null;
     }
@@ -181,12 +181,12 @@ export default function GameRunner({ mode }: { mode: string }) {
             <form className="w-full max-w-lg pb-10 mx-auto">
               <div className="flex flex-wrap -mx-3 mb-5">
                 {getGameSetting('wpm', 'WPM')}
-                {getGameSetting('fwpm', 'Farnsworth')}
+                {getGameSetting('fwpm', <Fragment>Farnsworth <br /><small>Lower to increase space between characters</small></Fragment>)}
                 <div className="w-full">
                   <div className="mx-3 py-2 text-green-800 text-sm" onClick={onAdvancedClick} style={{display: (state.advancedSettings ? "none": "block")}}>Advanced Settings</div>
                   <div className="flex flex-wrap" style={{display: (state.advancedSettings ? "block" : "none")}}>
-                    {getGameSetting('freq', 'Frequency')}
-                    {getGameSetting('preDelay', 'Audio Delay (for BT headphones)')}
+                    {getGameSetting('freq', 'Frequency (hz)')}
+                    {getGameSetting('preDelay', <Fragment>Audio Delay (ms) <br /><small>Increase if your Bluetooth headset is clipping the start of the audio</small></Fragment>)}
                   </div>
                 </div>
               </div>

@@ -16,6 +16,10 @@ a {
   @apply text-blue-400
 }
 
+small {
+  @apply text-green-600
+}
+
 @font-face {
   font-family: 'PressStart2P-Regular';
   src: url('/fonts/PressStart2P-Regular.ttf');
