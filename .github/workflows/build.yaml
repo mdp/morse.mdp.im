@@ -28,6 +28,8 @@ jobs:
       run: yarn
     - name: Setup config
       run: cp config.prod.js config.js
+    - name: Run tests
+      run: yarn test
     - name: Build nextjs
       run: yarn next build && yarn next export
     - name: Deploy to s3

@@ -2,6 +2,9 @@ import { CallSignGameRufzxp, CallSignGameStreak, CallSignGameTurns } from "./gam
 import Game, { FetchData } from "./game";
 import { RandomCharsTurns, LETTERS, RandomCharsStreak, RandomCharsRufzxp, NUMBERS } from "./games/random_chars";
 import { WordGameRufzxp, WordGameStreak, WordGameTurns } from "./games/word_game";
+import { buildProgressiveGameList } from "./games/koch";
+import { letters as lcwoLetters } from "./games/koch/lcwo";
+import { letters as cwopsLetters } from "./games/koch/cwops";
 
 
 export const turnGameList: Game[] = [
@@ -41,7 +44,7 @@ export const turnGameList: Game[] = [
         id: "random_five_letters_numbers",
         name: "Random 5 Letters and Numbers",
         description: "5 letters and numbers at random",
-        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS), // 
         turns: 50,
         length: 5,
     }),
@@ -111,7 +114,7 @@ export const streakGameList: Game[] = [
         id: "random_five_letters_numbers_streak",
         name: "Random 5 Letters and Numbers",
         description: "5 letters and numbers at random",
-        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS), // 
         lives: 3,
         length: 5,
     }),
@@ -181,7 +184,7 @@ export const rufzxpGameList: Game[] = [
         id: "random_five_letters_numbers_rufzxp",
         name: "Random 5 Letters and Numbers",
         description: "5 letters and numbers at random",
-        charSet: [].concat(LETTERS, LETTERS, NUMBERS).join(''), // 
+        charSet: [].concat(LETTERS, LETTERS, NUMBERS),
         turns: 50,
         length: 5,
     }),
@@ -213,6 +216,9 @@ export const rufzxpGameList: Game[] = [
     }),
 ]
 
-const allGames = [].concat(streakGameList, turnGameList, rufzxpGameList);
+export const lcwoGameList = buildProgressiveGameList('lcwo', lcwoLetters)
+export const cwopsGameList = buildProgressiveGameList('cwops', cwopsLetters)
+
+const allGames = [].concat(streakGameList, turnGameList, rufzxpGameList, lcwoGameList, cwopsGameList);
 
 export default allGames

@@ -24,6 +24,12 @@ export default function Index() {
             </Link>
           </li>
           <li className="items-center my-2 px-4">
+            <Link href={`/koch-copy/`} passHref>
+              <button className="w-full justify-center rounded-md border border-gray-300 p-4"
+              >Koch Training Games</button>
+            </Link>
+          </li>
+          <li className="items-center my-2 px-4">
             <Link href={`/news/`} passHref>
               <button className="w-full justify-center rounded-md border border-gray-300 p-4"
               >Morse Code Headlines</button>

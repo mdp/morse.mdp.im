@@ -5,8 +5,8 @@ import { StreakBasedGame } from "./streak_game";
 import { RufzxpGame } from "./rufzxp_game";
 import { swaps as morseSwaps } from '../../morse'
 
-export const LETTERS = "abcdefghijklmnopqrstuvwxyz";
-export const NUMBERS = "0123456789";
+export const LETTERS = "abcdefghijklmnopqrstuvwxyz".split('');
+export const NUMBERS = "0123456789".split('');
 export const COMMON_SYMBOLS = "/.,?";
 
 function getSwapMasks(power: number): number[] {
@@ -31,7 +31,7 @@ function intToMask(i: number, len: number): number[] {
     return binArr
 }
 
-function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
+function evilSwap(str: string[], charSet: string[], maskArr: number[]): string[] {
     const result = []
     for (let j=0; j < maskArr.length; j++) {
         if (maskArr[j] === 1) {
@@ -41,7 +41,7 @@ function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
                 result.push(randomChar(swap))
             } else {
                 // Avoid randoming picking the same character
-                result.push(randomChar(charSet.replace(str[j], '')))
+                result.push(randomChar(charSet.filter((s) => s !== str[j])))
             }
         } else {
             result.push(str[j])
@@ -50,7 +50,7 @@ function evilSwap(str: string, charSet: string, maskArr: number[]): string[] {
     return result
 }
 
-function getAnswers(str: string, charSet: string): string[] {
+function getAnswers(str: string[], charSet: string[]): string[] {
     const strLen = str.length
     const masks = getSwapMasks(strLen)
     const answers = []
@@ -62,20 +62,20 @@ function getAnswers(str: string, charSet: string): string[] {
     return answers
 }
 
-function getGroup(length: number, charSet: string): string {
+function getGroup(length: number, charSet: string[]): string[] {
     const group = []
     for (let i=0; i<length; i++) {
         group.push(randomChar(charSet))
     }
-    return group.join("")
+    return group
 }
 
-function buildQuestionRandomGroup({spaced, length, charSet}: {spaced: boolean, length: number, charSet: string}, gameState: GameState): Question {
+function buildQuestionRandomGroup({spaced, length, charSet}: {spaced: boolean, length: number, charSet: string[]}, gameState: GameState): Question {
     const pick = getGroup(length, charSet)
     const answers = getAnswers(pick, charSet)
     const q: Question = {
         id: Date.now(),
-        phrase: [pick],
+        phrase: [pick.join('')],
         answers:[answers],
         spaced,
         gameSettings: gameState.gameSettings,
@@ -86,13 +86,13 @@ function buildQuestionRandomGroup({spaced, length, charSet}: {spaced: boolean, l
 interface RandomCharsArgs extends DefaultGameArgs {
     turns: number
     length: number
-    charSet: string
+    charSet: string[]
 }
 
 // TODO: Allow for character and numbers at some point (and maybe symbols)
 export class RandomCharsTurns extends TurnBasedGame {
     readonly type: string
-    readonly charSet: string
+    readonly charSet: string[]
     readonly turns: number
     readonly length: number
     isReady: boolean
@@ -115,12 +115,12 @@ export class RandomCharsTurns extends TurnBasedGame {
 interface RandomCharsStreakArgs extends DefaultGameArgs {
     lives: number
     length: number
-    charSet: string
+    charSet: string[]
 }
 
 export class RandomCharsStreak extends StreakBasedGame {
     readonly type: string
-    readonly charSet: string
+    readonly charSet: string[]
     readonly lives: number
     readonly length: number
     isReady: boolean
@@ -142,7 +142,7 @@ export class RandomCharsStreak extends StreakBasedGame {
 
 export class RandomCharsRufzxp extends RufzxpGame {
     readonly type: string
-    readonly charSet: string
+    readonly charSet: string[]
     readonly turns: number
     readonly length: number
     isReady: boolean

@@ -16,7 +16,7 @@ const MAXIMUM_FREQ = 1200;
 const MINIMUM_PREDELAY = 100;
 const MAXIMUM_PREDELAY = 2000;
 
-export default function GameRunner({ mode }: { mode: string }) {
+export default function GameRunner({ mode, id, gameName }: { mode: string, id: string, gameName: string }) {
   const game: Game | null = gameList.find((a) => a.id === mode) || null
 
   const [morseSettings, setMorseSettings]: [GameSettings, Function] = getState();
@@ -144,7 +144,7 @@ export default function GameRunner({ mode }: { mode: string }) {
               <h3>Percent Correct: {finalScore.percentCorrect}</h3>
             ) : null}
             <h3>Correct Decodes: {state.charactersDecoded}</h3>
-            <Link href={`/head-copy/highscores/?mode=${mode}&scoretime=${finalScore.ts}`} passHref>
+            <Link href={`/${id}/highscores/?mode=${mode}&scoretime=${finalScore.ts}`} passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Play Again</button>
@@ -169,7 +169,7 @@ export default function GameRunner({ mode }: { mode: string }) {
           <header className="font-sans text-center pb-10">
             <h1
               className="font-bold font-sans break-normal text-gray-900 text-3xl"
-            > 🧠 Head Copy ✍️ </h1>
+            > 🧠 {gameName} ✍️ </h1>
             <h2
               className="font-sans break-normal text-gray-800 text-2xl pt-5"
             > {game.name} </h2>
@@ -193,10 +193,10 @@ export default function GameRunner({ mode }: { mode: string }) {
             </form>
 
             <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3" onClick={startNewGame}>Click to Play</button>
-            <Link href={`/head-copy/highscores/?mode=${mode}`} passHref>
+            <Link href={`/${id}/highscores/?mode=${mode}`} passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3 mb-3">Highscores</button>
             </Link>
-            <Link href="/head-copy" passHref>
+            <Link href={`/${id}`} passHref>
               <button className="w-full justify-center eightbit-btn text-xl p-4 mt-3">Back to Menu</button>
             </Link>
           </div>

@@ -8,7 +8,7 @@ export default function Play() {
 
     //TODO: Handle error if game doesn't exist
     if (mode) {
-        return <GameRunner mode={[].concat(query.mode)[0]} id="head-copy" gameName="Head Copy"></GameRunner>
+        return <GameRunner mode={[].concat(query.mode)[0]} id="koch-copy" gameName="Koch Training Games" ></GameRunner>
     } else {
         return <></>
     }
