@@ -1,6 +1,7 @@
 # Morse Training App
 [![Podcast Deploy](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/podcast_cron.yaml)
 [![CI](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml/badge.svg)](https://github.com/mdp/morse.mdp.im/actions/workflows/build.yaml)
+[![Codespaces](https://img.shields.io/badge/Codespaces-Launch-brightgreen)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=278430466)
 
 [![MorseHeadCopy](https://user-images.githubusercontent.com/2868/160646418-083953b9-c6f2-4a61-a15b-97e8c863986b.png)](/)
 
