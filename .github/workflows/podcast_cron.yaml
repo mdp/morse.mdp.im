@@ -25,7 +25,9 @@ jobs:
         yarn ts-node podcast/bin/new_podcast.ts -f 10 -w 25 --prefix podcast morse.mdp.im && \
         yarn ts-node podcast/bin/new_podcast.ts -f 15 -w 25 --prefix podcast morse.mdp.im && \
         yarn ts-node podcast/bin/new_podcast.ts -f 20 -w 25 --prefix podcast morse.mdp.im && \
-        yarn ts-node podcast/bin/new_podcast.ts -f 25 -w 25 --prefix podcast morse.mdp.im
+        yarn ts-node podcast/bin/new_podcast.ts -f 25 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/new_podcast.ts -f 30 -w 30 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/new_podcast.ts -f 35 -w 35 --prefix podcast morse.mdp.im
     - name: Update RSS
       env:
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
@@ -35,7 +37,9 @@ jobs:
         yarn ts-node podcast/bin/update_rss.ts -f 10 -w 25 --prefix podcast morse.mdp.im && \
         yarn ts-node podcast/bin/update_rss.ts -f 15 -w 25 --prefix podcast morse.mdp.im && \
         yarn ts-node podcast/bin/update_rss.ts -f 20 -w 25 --prefix podcast morse.mdp.im && \
-        yarn ts-node podcast/bin/update_rss.ts -f 25 -w 25 --prefix podcast morse.mdp.im
+        yarn ts-node podcast/bin/update_rss.ts -f 25 -w 25 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/update_rss.ts -f 30 -w 30 --prefix podcast morse.mdp.im && \
+        yarn ts-node podcast/bin/update_rss.ts -f 35 -w 35 --prefix podcast morse.mdp.im
     - name: Update Headlines for website
       env:
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
