@@ -7,6 +7,15 @@
 
 **A [webbased game](https://morse.mdp.im/head-copy) and [podcast](https://morse.mdp.im/news/) focused on learning to "head copy" morse code.**
 
+## Podcast Feeds
+
+- [10 wpm](https://morse.mdp.im/podcast/rss-10.xml)
+- [15 wpm](https://morse.mdp.im/podcast/rss-15.xml)
+- [20 wpm](https://morse.mdp.im/podcast/rss-20.xml)
+- [25 wpm](https://morse.mdp.im/podcast/rss-25.xml)
+- [30 wpm](https://morse.mdp.im/podcast/rss-30.xml)
+- [35 wpm](https://morse.mdp.im/podcast/rss-35.xml)
+
 -----
 
 ## Credits
