@@ -9,12 +9,12 @@
 
 ## Podcast Feeds
 
-- [10 wpm](https://morse.mdp.im/podcast/rss-10.xml)
-- [15 wpm](https://morse.mdp.im/podcast/rss-15.xml)
-- [20 wpm](https://morse.mdp.im/podcast/rss-20.xml)
-- [25 wpm](https://morse.mdp.im/podcast/rss-25.xml)
-- [30 wpm](https://morse.mdp.im/podcast/rss-30.xml)
-- [35 wpm](https://morse.mdp.im/podcast/rss-35.xml)
+- [10 WPM RSS](https://morse.mdp.im/podcast/rss-10.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-10-wpm/id1615630558)
+- [15 WPM RSS](https://morse.mdp.im/podcast/rss-15.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-15-wpm/id1533526598)
+- [20 WPM RSS](https://morse.mdp.im/podcast/rss-20.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-20-wpm/id1531399638)
+- [25 WPM RSS](https://morse.mdp.im/podcast/rss-25.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-25-wpm/id1536964268)
+- [30 WPM RSS](https://morse.mdp.im/podcast/rss-30.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-30-wpm/id1656007282)
+- [35 WPM RSS](https://morse.mdp.im/podcast/rss-35.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-35-wpm/id1656007555)
 
 -----
 
