@@ -7,9 +7,9 @@
 
 **A [webbased game](https://morse.mdp.im/head-copy) and [podcast](https://morse.mdp.im/news/) focused on learning to "head copy" morse code.**
 
-## News Headlines Morse Code Podcasts
+## News Headlines in Morse Code Podcast
 
-This podcast is released twice a day and includes the latest news headlines, delivered in Morse code at the selected speed ([Listen to an example](https://www.listennotes.com/podcasts/news-headlines-in-morse-code-at-20-wpm-mark-JIUqd6RwXsa/)).
+This podcast is released twice a day and includes the latest news headlines, delivered in Morse Code at the selected speed ([Listen to an example](https://tunein.com/podcasts/p1766440/)).
 
 - [10 WPM RSS](https://morse.mdp.im/podcast/rss-10.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-10-wpm/id1615630558)
 - [15 WPM RSS](https://morse.mdp.im/podcast/rss-15.xml) / [iTunes](https://podcasts.apple.com/us/podcast/news-headlines-in-morse-code-at-15-wpm/id1533526598)
