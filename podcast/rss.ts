@@ -52,7 +52,7 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
         guid: urlToGuid(episode.audioUrl),
         title: `News Headlines at ${episode.fwpm}`,
         description: contentHeader + entities.encode(content),
-        url: `https://morse.mdp.im/news/?wpm=${fwpm}`,
+        url: `https://morse.mdp.im/podcast-${fwpm}.html`,
         date: episode.date,
         enclosure : {
           url: episode.audioUrl,
