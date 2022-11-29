@@ -1,8 +1,15 @@
+import { createHash } from "crypto";
 import { Podcast as PodcastEpisode } from "./podcast"
 import { Podcast } from "podcast"
 import { XmlEntities as Entities } from 'html-entities'
 
 const entities = new Entities();
+
+const urlToGuid = (url: string) => {
+  const hash = createHash('sha256')
+  hash.update(url)
+  return hash.digest('base64url')
+}
 
 export async function buildPodcast(podcasts: PodcastEpisode[]) {
     const fwpm = podcasts[0].fwpm;
@@ -32,6 +39,9 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
         }]
       }],
       itunesImage: `https://morse.mdp.im/podcast_cover_${fwpm}.jpg`,
+      customElements: [
+        {'googleplay:block': 'yes'},
+      ],
     });
     for (let j=0; podcasts.length > j; j++) {
       let episode: PodcastEpisode = podcasts[j]
@@ -39,6 +49,7 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
       const contentHeader = `Morse code transcription: <br /><br />`
       const content = episode.transcription
       feed.addItem({
+        guid: urlToGuid(episode.audioUrl),
         title: `News Headlines at ${episode.fwpm}`,
         description: contentHeader + entities.encode(content),
         url: `https://morse.mdp.im/news/?wpm=${fwpm}`,
