@@ -39,9 +39,6 @@ export async function buildPodcast(podcasts: PodcastEpisode[]) {
         }]
       }],
       itunesImage: `https://morse.mdp.im/podcast_cover_${fwpm}.jpg`,
-      customElements: [
-        {'googleplay:block': 'yes'},
-      ],
     });
     for (let j=0; podcasts.length > j; j++) {
       let episode: PodcastEpisode = podcasts[j]
