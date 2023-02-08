@@ -19,8 +19,8 @@ type HeadlineJson = {
 }
 
 async function main() {
-    if (!process.env["NEWSAPI_KEY"] || !process.env["AWS_ACCESS_KEY_ID"]) {
-        console.log("Can only run with NEWSAPI_KEY and AWS credentials")
+    if (!process.env["NEWSAPI_KEY"]) {
+        console.log("Can only run with NEWSAPI_KEY")
         console.log(process.env)
         process.exit(-1)
     }
@@ -43,6 +43,11 @@ async function main() {
     console.log(`Updating with ${headlines.length} headlines`)
 
     // Upload JSON for Website
+    if (!process.env["AWS_ACCESS_KEY_ID"]) {
+        console.log("No AWS Key, not updating s3 with headlines!")
+        console.log(process.env)
+        process.exit(-1)
+    }
     await s3Client.send(new PutObjectCommand({
         Bucket: bucket, Key: headlinesJsonKey, Body: JSON.stringify(json),
         ContentType: "application/json"

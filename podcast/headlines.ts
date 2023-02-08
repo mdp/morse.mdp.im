@@ -5,9 +5,10 @@ import { promisify } from 'util';
 const config = {
   "name": "News_Headlines",
   "query": {
-    "pageSize": 20,
-    "sources": "bbc-news, google-news",
+    "pageSize": 10,
+    "sources": "bbc-news",
     "language": "en"
+
   }
 }
 
@@ -57,6 +58,7 @@ export async function fetchHeadlines(apiKey): Promise<string[]> {
   const results = await headlines(config.query)
   const titles = results.articles.map(a => a['title']);
   const cleanedTitles = shuffle(titles.map(cleanTitles({ attribution: false })));
+  console.log(results)
   return cleanedTitles
 }
 
