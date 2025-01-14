@@ -1,0 +1,39 @@
+name: Active Repository Fixer
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every Monday
+    - cron: '0 0 * * 1'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  update-alive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create timestamp
+        run: |
+          echo "Last checked: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > im_alive.txt
+      
+      - name: Create Branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git checkout -b im-alive-check
+          git add im_alive.txt
+          git commit -m "Update alive timestamp"
+          git push -f origin im-alive-check
+      
+      - name: Create or Update PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_EXISTS=$(gh pr list --head im-alive-check --json number | jq length)
+          if [ "$PR_EXISTS" -eq "0" ]; then
+            gh pr create --title "I'm alive" --body "Automated alive check" --head im-alive-check
+          fi
